@@ -22,6 +22,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/useridTV"
+            android:text="User ID : ID HERE"
+            android:textSize="18sp"
+            android:textColor="@color/colorPrimary"
+            android:layout_gravity="center"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/nameTV"
             android:text="Name : NAME HERE"
             android:textSize="18sp"
@@ -32,14 +40,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/emailTV"
             android:text="Email : EMAIL HERE"
-            android:textSize="18sp"
-            android:textColor="@color/colorPrimary"
-            android:layout_gravity="center"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/useridTV"
-            android:text="User ID : ID HERE"
             android:textSize="18sp"
             android:textColor="@color/colorPrimary"
             android:layout_gravity="center"/>

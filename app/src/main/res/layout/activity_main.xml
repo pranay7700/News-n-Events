@@ -127,7 +127,8 @@
                         android:text="Password :"
                         android:textColor="@color/colorPurple"
                         android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        />
 
                     <EditText
                         android:id="@+id/ETpassId"
@@ -135,7 +136,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
-                        android:inputType="textPassword" />
+                        android:inputType="textPassword"
+                        />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -193,24 +195,6 @@
                 android:textStyle="bold"
                 tools:ignore="NotSibling" />
 
-            <Button
-                android:id="@+id/BTNfb"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/TVForgot"
-                android:layout_alignLeft="@+id/cv"
-                android:layout_alignRight="@+id/cv"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="80dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/bg_uifb"
-                android:drawableLeft="@drawable/newfblogo1"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:text="LOGIN WITH FACEBOOK"
-                android:textColor="@color/colorPurple"
-
-                />
 
             <Button
                 android:id="@+id/BTNgoogle"
@@ -220,7 +204,7 @@
                 android:layout_alignLeft="@+id/cv"
                 android:layout_alignRight="@+id/cv"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="140dp"
+                android:layout_marginTop="80dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/bg_uifb"
                 android:drawableLeft="@drawable/newgooglelogo1"
@@ -228,6 +212,8 @@
                 android:paddingRight="20dp"
                 android:text="LOGIN WITH GOOGLE"
                 android:textColor="@color/colorPurple" />
+
+
         </RelativeLayout>
     </ScrollView>
 

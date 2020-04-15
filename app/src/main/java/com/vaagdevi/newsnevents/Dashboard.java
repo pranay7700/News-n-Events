@@ -1,12 +1,6 @@
 package com.vaagdevi.newsnevents;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
-import android.graphics.ImageFormat;
-import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,8 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
-import com.facebook.internal.ImageRequest;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -43,6 +40,7 @@ public class Dashboard extends AppCompatActivity {
     TextView dashboardname;
     TextView dashboardemail;
     TextView dashboarduserid;
+
     ImageView dashboardphoto;
 
     @Override
@@ -55,6 +53,7 @@ public class Dashboard extends AppCompatActivity {
         dashboardname=findViewById(R.id.nameTV);
         dashboardemail=findViewById(R.id.emailTV);
         dashboarduserid=findViewById(R.id.useridTV);
+
         dashboardphoto=findViewById(R.id.photoIV);
 
 
@@ -112,11 +111,13 @@ public class Dashboard extends AppCompatActivity {
             String personFamilyName = acct.getFamilyName();
             String personEmail = acct.getEmail();
             String personId = acct.getId();
+
             Uri personPhoto = acct.getPhotoUrl();
 
             dashboardname.setText("Name : "+personName);
             dashboardemail.setText("Email : "+personEmail);
             dashboarduserid.setText("ID : "+personId);
+
             Glide.with(this).load(personPhoto).into(dashboardphoto);
         }
 
@@ -141,4 +142,5 @@ public class Dashboard extends AppCompatActivity {
 
 
     }
+
 }

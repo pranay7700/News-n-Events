@@ -1,8 +1,5 @@
 package com.vaagdevi.newsnevents;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,11 +10,13 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,10 +26,12 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
 
+
     private FirebaseAuth mAuth;
 
     int RC_SIGN_IN = 0;
     GoogleSignInClient mGoogleSignInClient;
+
 
     EditText Emailid;
     EditText Passid;
@@ -38,6 +39,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
     Button login;
     Button facebook;
     Button google;
+
     ImageButton register;
 
     TextView forgotpassid;
@@ -48,18 +50,19 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Emailid=(EditText)findViewById(R.id.ETemailId);
-        Passid=(EditText)findViewById(R.id.ETpassId);
+        Emailid = (EditText) findViewById(R.id.ETemailId);
+        Passid = (EditText) findViewById(R.id.ETpassId);
 
-        login=(Button)findViewById(R.id.BTNlogin);
-        facebook=(Button)findViewById(R.id.BTNfb);
-        google=(Button)findViewById(R.id.BTNgoogle);
-        register=(ImageButton)findViewById(R.id.IMGBTNregister);
+        login = (Button) findViewById(R.id.BTNlogin);
+        google = (Button) findViewById(R.id.BTNgoogle);
+        register = (ImageButton) findViewById(R.id.IMGBTNregister);
 
-        forgotpassid=(TextView)findViewById(R.id.TVForgot);
+
+        forgotpassid = (TextView) findViewById(R.id.TVForgot);
 
 
         mAuth = FirebaseAuth.getInstance();
+
 
 
         // Configure sign-in to request the user's ID, email address, and basic
@@ -79,37 +82,25 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         });
 
 
-
-
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String emailid=Emailid.getText().toString();
-                String passid=Passid.getText().toString();
+                String emailid = Emailid.getText().toString();
+                String passid = Passid.getText().toString();
 
 
-
-                if (emailid.isEmpty()&&passid.isEmpty())
-                {
-                    Toast.makeText(MainActivity.this,"Fields Empty!",Toast.LENGTH_SHORT).show();
-                }
-
-                else if (emailid.isEmpty())
-                {
+                if (emailid.isEmpty() && passid.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Fields Empty!", Toast.LENGTH_SHORT).show();
+                } else if (emailid.isEmpty()) {
                     Emailid.setError("Provide Your Email");
                     Emailid.requestFocus();
-                }
-                else if(passid.isEmpty())
-                {
+                } else if (passid.isEmpty()) {
                     Passid.setError("Enter Your Password");
                     Passid.requestFocus();
-                }
+                } else if (!(emailid.isEmpty() && passid.isEmpty())) {
 
-                else if (!(emailid.isEmpty()&&passid.isEmpty()))
-                {
-
-                    mAuth.signInWithEmailAndPassword(emailid,passid)
+                    mAuth.signInWithEmailAndPassword(emailid, passid)
                             .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -117,12 +108,9 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                                         // Sign in success, update UI with the signed-in user's information
 
 
-
-
-                                        Toast.makeText(MainActivity.this,"Logined Successfully",Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(MainActivity.this,Dashboard.class));
+                                        Toast.makeText(MainActivity.this, "Logined Successfully", Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(MainActivity.this, Dashboard.class));
                                         finish();
-
 
 
                                     } else {
@@ -136,12 +124,9 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                                 }
                             });
 
+                } else {
+                    Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
                 }
-                else
-                {
-                    Toast.makeText(MainActivity.this,"Error",Toast.LENGTH_SHORT).show();
-                }
-
 
 
             }
@@ -151,13 +136,13 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(MainActivity.this,Registration.class));
+                startActivity(new Intent(MainActivity.this, Registration.class));
 
             }
         });
 
-    }
 
+    }
 
 
     private void signIn() {
@@ -175,6 +160,9 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
             // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
+
+
+
         }
     }
 
@@ -198,8 +186,8 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if(account != null) {
-            startActivity(new Intent(MainActivity.this,Dashboard.class));
+        if (account != null) {
+            startActivity(new Intent(MainActivity.this, Dashboard.class));
         }
         super.onStart();
     }

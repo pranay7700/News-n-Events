@@ -1,8 +1,5 @@
 package com.vaagdevi.newsnevents;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,16 +8,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 public class Registration extends AppCompatActivity {
 
@@ -30,6 +26,7 @@ public class Registration extends AppCompatActivity {
     EditText Username;
     EditText Password;
     EditText Confirmpassword;
+    EditText Mobilenumber;
 
     Button signup;
 
@@ -44,6 +41,7 @@ public class Registration extends AppCompatActivity {
         Username=(EditText)findViewById(R.id.etusername);
         Password=(EditText)findViewById(R.id.etpassword);
         Confirmpassword=(EditText)findViewById(R.id.etconfirmpassword);
+        Mobilenumber=(EditText)findViewById(R.id.etmobilenumber);
 
         signup=(Button)findViewById(R.id.btnsignup);
 
@@ -64,8 +62,9 @@ public class Registration extends AppCompatActivity {
                 final String username=Username.getText().toString();
                 final String password=Password.getText().toString();
                 final String confirmpassword=Confirmpassword.getText().toString();
+                final String mobilenumber=Mobilenumber.getText().toString();
 
-                if (email.isEmpty()&&username.isEmpty()&&password.isEmpty()&&confirmpassword.isEmpty())
+                if (email.isEmpty()&&username.isEmpty()&&password.isEmpty()&&confirmpassword.isEmpty()&&mobilenumber.isEmpty())
                 {
                     Toast.makeText(Registration.this,"Empty Fields",Toast.LENGTH_SHORT).show();
                 }
@@ -89,7 +88,13 @@ public class Registration extends AppCompatActivity {
                     Confirmpassword.setError("Confirm Password is Required");
                     Confirmpassword.requestFocus();
                 }
-                else if (!(email.isEmpty()&&username.isEmpty()&&password.isEmpty()&&confirmpassword.isEmpty()))
+                else if (mobilenumber.isEmpty())
+                {
+                    Mobilenumber.setError("Mobile Number is Required");
+                    Mobilenumber.requestFocus();
+                }
+
+                else if (!(email.isEmpty()&&username.isEmpty()&&password.isEmpty()&&confirmpassword.isEmpty()&&mobilenumber.isEmpty()))
                 {
 
                     mAuth.createUserWithEmailAndPassword(email,password)
@@ -100,7 +105,7 @@ public class Registration extends AppCompatActivity {
                                     if ((task.isSuccessful())) {
                                         // Sign in success, update UI with the signed-in user's information
 
-                                        Regdatabase regdatabase=new Regdatabase(email,username,password,confirmpassword);
+                                        Regdatabase regdatabase=new Regdatabase(email,username,password,confirmpassword,mobilenumber);
 
                                         FirebaseDatabase.getInstance().getReference(databaseref.getKey()).child(mAuth.getCurrentUser().getUid())
                                                 .setValue(regdatabase).addOnCompleteListener(new OnCompleteListener<Void>() {
