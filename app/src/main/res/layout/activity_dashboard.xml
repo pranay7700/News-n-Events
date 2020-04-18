@@ -43,6 +43,13 @@
             android:textSize="18sp"
             android:textColor="@color/colorPrimary"
             android:layout_gravity="center"/>
+        <Button
+            android:id="@+id/updateprofileBTN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Update Profile"
+            android:textSize="20dp"
+            android:layout_gravity="center"/>
         <TextView
             android:id="@+id/logoutTV"
             android:layout_width="wrap_content"
