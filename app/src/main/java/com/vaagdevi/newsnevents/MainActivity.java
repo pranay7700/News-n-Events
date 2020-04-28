@@ -1,10 +1,14 @@
 package com.vaagdevi.newsnevents;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -12,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatCheckBox;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -65,6 +70,24 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
 
 
 
+        @SuppressLint("WrongViewCast") AppCompatCheckBox checkBox = (AppCompatCheckBox)findViewById(R.id.show_hide_password);
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (isChecked) {
+                    // show password
+                    Passid.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                } else {
+                    // hide password
+                    Passid.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+
+            }
+        });
+
+
+
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -109,7 +132,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
 
 
                                         Toast.makeText(MainActivity.this, "Logined Successfully", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(MainActivity.this, Dashboard.class));
+                                        startActivity(new Intent(MainActivity.this, Dashboard2.class));
                                         finish();
 
 
@@ -179,7 +202,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             // Signed in successfully, show authenticated UI.
-            startActivity(new Intent(MainActivity.this, Dashboard.class));
+            startActivity(new Intent(MainActivity.this, Dashboard2.class));
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
@@ -196,7 +219,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
-            startActivity(new Intent(MainActivity.this, Dashboard.class));
+            startActivity(new Intent(MainActivity.this, Dashboard2.class));
         }
         super.onStart();
     }

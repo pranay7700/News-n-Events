@@ -26,7 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class Dashboard extends AppCompatActivity {
+public class Dashboard2 extends AppCompatActivity {
 
 
     GoogleSignInClient mGoogleSignInClient;
@@ -46,7 +46,7 @@ public class Dashboard extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard);
+        setContentView(R.layout.activity_dashboard2);
 
         logout=(Button)findViewById(R.id.logoutBTN);
 
@@ -93,7 +93,7 @@ public class Dashboard extends AppCompatActivity {
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(Dashboard.this);
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(Dashboard2.this);
         if (acct != null) {
             String personName = acct.getDisplayName();
             String personGivenName = acct.getGivenName();
@@ -120,13 +120,13 @@ public class Dashboard extends AppCompatActivity {
 
     private void signOut() {
         mGoogleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(Dashboard.this,"Successfully signed out",Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(Dashboard.this, MainActivity.class));
-                        finish();
-                    }
-                });
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(Dashboard2.this,"Successfully signed out",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(Dashboard2.this, MainActivity.class));
+                finish();
+            }
+        });
 
 
 
