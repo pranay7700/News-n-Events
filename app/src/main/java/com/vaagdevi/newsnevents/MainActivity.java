@@ -29,6 +29,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+
 public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
 
 
@@ -132,7 +133,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
 
 
                                         Toast.makeText(MainActivity.this, "Logined Successfully", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(MainActivity.this, Dashboard2.class));
+                                        startActivity(new Intent(MainActivity.this, Dashboard1.class));
                                         finish();
 
 
@@ -202,7 +203,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             // Signed in successfully, show authenticated UI.
-            startActivity(new Intent(MainActivity.this, Dashboard2.class));
+            startActivity(new Intent(MainActivity.this, Dashboard1.class));
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
@@ -219,7 +220,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
-            startActivity(new Intent(MainActivity.this, Dashboard2.class));
+            startActivity(new Intent(MainActivity.this, Dashboard1.class));
         }
         super.onStart();
     }
