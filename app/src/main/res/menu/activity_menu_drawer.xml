@@ -18,13 +18,14 @@
             android:title="News" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Profile">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_share"
-                android:title="Share" />
+                android:id="@+id/nav_userprofile"
+                android:icon="@drawable/ic_userprofile"
+                android:title="User Profile" />
         </menu>
     </item>
+
 
 </menu>

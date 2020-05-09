@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditProfile">
+    tools:context=".Notification">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="This is Edit Profile"
+        android:text="This is Notification Page"
         android:textSize="20dp"
         android:gravity="center"
         />

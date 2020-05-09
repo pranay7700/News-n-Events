@@ -5,12 +5,12 @@
     android:layout_height="match_parent"
     tools:context=".Events">
 
-    <TextView
+    <WebView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="This is Events Fragment"
-        android:textSize="20dp"
-        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/webviewevents"
         />
+
 
 </FrameLayout>

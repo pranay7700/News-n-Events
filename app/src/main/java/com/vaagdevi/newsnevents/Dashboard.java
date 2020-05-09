@@ -30,59 +30,28 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-public class Dashboard1 extends AppCompatActivity {
+public class Dashboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-
-    GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth firebaseAuth;
+    GoogleSignInClient mGoogleSignInClient;
     private FirebaseDatabase firebaseDatabase;
 
-    TextView dashboard1name;
-    TextView dashboard1email;
-    ImageView dashboard1photo;
+
+    TextView dashboardname;
+    TextView dashboardemail;
+    ImageView dashboardphoto;
+
 
     private AppBarConfiguration mAppBarConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard1);
-
-
-        dashboard1name = findViewById(R.id.dashboard1nameTV);
-        dashboard1email = findViewById(R.id.dashboard1emailTV);
-        dashboard1photo = findViewById(R.id.dashboard1photoIV);
+        setContentView(R.layout.activity_dashboard);
 
         firebaseAuth = FirebaseAuth.getInstance();
-
-
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference(firebaseAuth.getUid());
-
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                Regdatabase userprofile = dataSnapshot.getValue(Regdatabase.class);
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-
-            }
-        });
-
-
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -102,48 +71,24 @@ public class Dashboard1 extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_events, R.id.nav_news)
+                R.id.nav_home, R.id.nav_events, R.id.nav_news, R.id.nav_userprofile)
                 .setDrawerLayout(drawer)
                 .build();
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        // Build a GoogleSignInClient with the options specified by gso.
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(Dashboard1.this);
-        if (acct != null) {
-            String personName = acct.getDisplayName();
-            String personGivenName = acct.getGivenName();
-            String personFamilyName = acct.getFamilyName();
-            String personEmail = acct.getEmail();
-            String personId = acct.getId();
-
-            Uri personPhoto = acct.getPhotoUrl();
-
-            dashboard1name.setText("Name :  " + personName);
-            dashboard1email.setText("Email : " + personEmail);
-
-            Glide.with(this).load(personPhoto).into(dashboard1photo);
-
-        }
+        updateNavheader();
 
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu, menu);
-
 
 
         return true;
@@ -164,18 +109,20 @@ public class Dashboard1 extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-            startActivity(new Intent(Dashboard1.this, Settings.class));
+            startActivity(new Intent(Dashboard.this, Settings.class));
             return true;
 
-        } else if (id == R.id.action_editprofile) {
-            startActivity(new Intent(Dashboard1.this, EditProfile.class));
+        } else if (id == R.id.action_notification) {
+            startActivity(new Intent(Dashboard.this, Notification.class));
             return true;
 
-        }else {
+        } else if (id == R.id.action_logout) {
 
             signOut();
-        }
+            finish();
+            return false;
 
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -185,8 +132,8 @@ public class Dashboard1 extends AppCompatActivity {
         mGoogleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(Dashboard1.this, "Successfully signed out", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(Dashboard1.this, MainActivity.class));
+                Toast.makeText(Dashboard.this, "Successfully signed out", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(Dashboard.this, MainActivity.class));
                 finish();
             }
         });
@@ -194,6 +141,49 @@ public class Dashboard1 extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
+        return false;
+    }
+
+    public void updateNavheader() {
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+
+        dashboardname = (TextView) headerView.findViewById(R.id.nameTV);
+        dashboardemail = (TextView) headerView.findViewById(R.id.emailTV);
+        dashboardphoto = (ImageView) headerView.findViewById(R.id.photoIV);
+
+
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        // Build a GoogleSignInClient with the options specified by gso.
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(Dashboard.this);
+        if (acct != null) {
+            String personName = acct.getDisplayName();
+            String personGivenName = acct.getGivenName();
+            String personFamilyName = acct.getFamilyName();
+            String personEmail = acct.getEmail();
+            String personId = acct.getId();
+
+            Uri personPhoto = acct.getPhotoUrl();
+
+            dashboardname.setText(personName);
+            dashboardemail.setText(personEmail);
+            Glide.with(this).load(personPhoto).into(dashboardphoto);
+
+
+        }
+
+
+    }
 
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Dashboard1">
+    tools:context=".Dashboard">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_dashboard1" />
+    <include layout="@layout/content_dashboard" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email"
-        android:background="@color/colorPurple"/>
+        android:background="@color/colorPurple"
+        app:srcCompat="@drawable/ic_faqs" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

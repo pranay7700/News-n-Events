@@ -31,6 +31,8 @@ public class Registration extends AppCompatActivity {
     EditText Confirmpassword;
     EditText Mobilenumber;
 
+    String Emailpattern = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+    String Passwordvalidate = "^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$";
 
 
     Button signup;
@@ -102,7 +104,7 @@ public class Registration extends AppCompatActivity {
                 else if (!(email.isEmpty()&&username.isEmpty()&&password.isEmpty()&&confirmpassword.isEmpty()&&mobilenumber.isEmpty()))
                 {
 
-                    mAuth.createUserWithEmailAndPassword(email,password)
+                        mAuth.createUserWithEmailAndPassword(email,password)
                             .addOnCompleteListener(Registration.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -110,15 +112,15 @@ public class Registration extends AppCompatActivity {
                                     if ((task.isSuccessful())) {
                                         // Sign in success, update UI with the signed-in user's information
 
-                                        Regdatabase regdatabase=new Regdatabase(email,username,password,confirmpassword,mobilenumber);
+                                        Regdatabase regdatabase = new Regdatabase(email, username, password, confirmpassword, mobilenumber);
 
                                         FirebaseDatabase.getInstance().getReference(databaseref.getKey()).child(mAuth.getCurrentUser().getUid())
                                                 .setValue(regdatabase).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
 
-                                                startActivity(new Intent(Registration.this,MainActivity.class));
-                                                Toast.makeText(Registration.this,"Signing Up....",Toast.LENGTH_SHORT).show();
+                                                startActivity(new Intent(Registration.this, MainActivity.class));
+                                                Toast.makeText(Registration.this, "Signing Up....", Toast.LENGTH_SHORT).show();
                                                 finish();
 
 
@@ -126,14 +128,13 @@ public class Registration extends AppCompatActivity {
                                         });
 
 
-
-
                                     } else {
                                         // If sign in fails, display a message to the user.
 
-                                        Toast.makeText(Registration.this, "Authentication failed."+task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(Registration.this, "Authentication failed." + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
                                     }
+
 
 
                                 }

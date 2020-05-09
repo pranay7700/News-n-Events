@@ -211,7 +211,6 @@
                 android:textStyle="bold"
                 tools:ignore="NotSibling" />
 
-
             <Button
                 android:id="@+id/BTNgoogle"
                 android:layout_width="match_parent"
@@ -228,6 +227,9 @@
                 android:paddingRight="20dp"
                 android:text="LOGIN WITH GOOGLE"
                 android:textColor="@color/colorPurple" />
+
+
+
 
 
         </RelativeLayout>

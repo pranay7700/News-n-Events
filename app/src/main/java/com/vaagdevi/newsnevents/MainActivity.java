@@ -32,7 +32,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
 
-
     private FirebaseAuth mAuth;
 
     int RC_SIGN_IN = 0;
@@ -41,13 +40,10 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
 
     EditText Emailid;
     EditText Passid;
-
     Button login;
     Button facebook;
     Button google;
-
     ImageButton register;
-
     TextView forgotpassid;
 
 
@@ -58,20 +54,16 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
 
         Emailid = (EditText) findViewById(R.id.ETemailId);
         Passid = (EditText) findViewById(R.id.ETpassId);
-
         login = (Button) findViewById(R.id.BTNlogin);
-        google = (Button) findViewById(R.id.BTNgoogle);
         register = (ImageButton) findViewById(R.id.IMGBTNregister);
-
-
+        google = (Button) findViewById(R.id.BTNgoogle);
         forgotpassid = (TextView) findViewById(R.id.TVForgot);
-
 
         mAuth = FirebaseAuth.getInstance();
 
 
 
-        @SuppressLint("WrongViewCast") AppCompatCheckBox checkBox = (AppCompatCheckBox)findViewById(R.id.show_hide_password);
+        @SuppressLint("WrongViewCast") final AppCompatCheckBox checkBox = (AppCompatCheckBox)findViewById(R.id.show_hide_password);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -88,6 +80,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         });
 
 
+        //In MainActivity onCreate
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -106,12 +99,13 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         });
 
 
+
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 String emailid = Emailid.getText().toString();
-                String passid = Passid.getText().toString();
+                final String passid = Passid.getText().toString();
 
 
                 if (emailid.isEmpty() && passid.isEmpty()) {
@@ -131,10 +125,9 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                                     if ((task.isSuccessful())) {
                                         // Sign in success, update UI with the signed-in user's information
 
-
                                         Toast.makeText(MainActivity.this, "Logined Successfully", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(MainActivity.this, Dashboard1.class));
-                                        finish();
+                                        startActivity(new Intent(MainActivity.this, Dashboard.class));
+
 
 
                                     } else {
@@ -144,7 +137,6 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
 
                                     }
 
-
                                 }
                             });
 
@@ -152,8 +144,9 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
                 }
 
-
             }
+
+
         });
 
         register.setOnClickListener(new View.OnClickListener() {
@@ -173,6 +166,8 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
 
             }
         });
+
+
 
 
     }
@@ -203,7 +198,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             // Signed in successfully, show authenticated UI.
-            startActivity(new Intent(MainActivity.this, Dashboard1.class));
+            startActivity(new Intent(MainActivity.this, Dashboard.class));
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
@@ -220,10 +215,11 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
-            startActivity(new Intent(MainActivity.this, Dashboard1.class));
+            startActivity(new Intent(MainActivity.this, Dashboard.class));
         }
         super.onStart();
     }
+
 
 
 

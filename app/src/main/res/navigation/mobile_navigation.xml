@@ -40,4 +40,10 @@
         android:name="com.vaagdevi.newsnevents.News"
         android:label="News"
         tools:layout="@layout/news_fragment" />
+    <fragment
+        android:id="@+id/nav_userprofile"
+        android:name="com.vaagdevi.newsnevents.UserProfile"
+        android:label="User Profile"
+        tools:layout="@layout/user_profile_fragment" />
+
 </navigation>

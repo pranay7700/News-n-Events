@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,6 +13,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 public class Events extends Fragment {
+
+
 
     private EventsViewModel mViewModel;
 
@@ -21,7 +25,20 @@ public class Events extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.events_fragment, container, false);
+        View view=inflater.inflate(R.layout.events_fragment, container, false);
+
+        WebView eventsview =(WebView) view.findViewById(R.id.webviewevents);
+
+        eventsview.getSettings().setJavaScriptEnabled(true);
+
+        eventsview.setWebViewClient(new WebViewClient());
+
+        eventsview.loadUrl("https://vaagdevinewsevents.blogspot.com/2020/05/events.html");
+
+
+        return view;
+
+
     }
 
     @Override
