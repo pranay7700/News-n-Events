@@ -1,7 +1,12 @@
 package com.vaagdevi.newsnevents;
 
+import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,8 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -30,28 +37,54 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.RemoteMessage;
+
+import static com.vaagdevi.newsnevents.R.id.action_logout;
+import static com.vaagdevi.newsnevents.R.id.action_settings;
+import static com.vaagdevi.newsnevents.R.id.drawer_layout;
+import static com.vaagdevi.newsnevents.R.id.emailTV;
+import static com.vaagdevi.newsnevents.R.id.nameTV;
+import static com.vaagdevi.newsnevents.R.id.nav_home;
+import static com.vaagdevi.newsnevents.R.id.nav_host_fragment;
+import static com.vaagdevi.newsnevents.R.id.nav_view;
+import static com.vaagdevi.newsnevents.R.id.photoIV;
 
 public class Dashboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String TAG = "Dashboard" ;
     private FirebaseAuth firebaseAuth;
     GoogleSignInClient mGoogleSignInClient;
     private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
+    String currentId;
 
 
     TextView dashboardname;
     TextView dashboardemail;
     ImageView dashboardphoto;
 
+    private long backPressedTime;
+    private Toast backToast;
+
 
     private AppBarConfiguration mAppBarConfiguration;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        currentId = firebaseAuth.getCurrentUser().getUid();
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("News n Events").child(currentId);
+
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -66,22 +99,19 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             }
         });
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        DrawerLayout drawer = findViewById(drawer_layout);
+        NavigationView navigationView = findViewById(nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_events, R.id.nav_news, R.id.nav_userprofile)
-                .setDrawerLayout(drawer)
-                .build();
+        mAppBarConfiguration = new AppBarConfiguration.Builder(nav_home).setDrawerLayout(drawer).build();
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavController navController = Navigation.findNavController(this, nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        updateNavheader();
+        updateGoogleNavheader();
 
-
+        updateLoginNavHeader();
     }
 
 
@@ -96,7 +126,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavController navController = Navigation.findNavController(this, nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
@@ -108,15 +138,11 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (id == action_settings) {
             startActivity(new Intent(Dashboard.this, Settings.class));
             return true;
 
-        } else if (id == R.id.action_notification) {
-            startActivity(new Intent(Dashboard.this, Notification.class));
-            return true;
-
-        } else if (id == R.id.action_logout) {
+        } else if (id == action_logout) {
 
             signOut();
             finish();
@@ -126,6 +152,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
         return super.onOptionsItemSelected(item);
     }
+
 
 
     private void signOut() {
@@ -147,15 +174,19 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         return false;
     }
 
-    public void updateNavheader() {
+    @SuppressLint("ResourceType")
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void updateGoogleNavheader() {
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(nav_view);
         View headerView = navigationView.getHeaderView(0);
 
-        dashboardname = (TextView) headerView.findViewById(R.id.nameTV);
-        dashboardemail = (TextView) headerView.findViewById(R.id.emailTV);
-        dashboardphoto = (ImageView) headerView.findViewById(R.id.photoIV);
+        dashboardname = (TextView) headerView.findViewById(nameTV);
+        dashboardemail = (TextView) headerView.findViewById(emailTV);
+        dashboardphoto = (ImageView) headerView.findViewById(photoIV);
 
+
+        //Using Google SignIn
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -178,12 +209,80 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
             dashboardname.setText(personName);
             dashboardemail.setText(personEmail);
-            Glide.with(this).load(personPhoto).into(dashboardphoto);
 
+            if (personPhoto != null) {
 
+                Glide.with(this).load(personPhoto).into(dashboardphoto);
+
+            } else {
+                dashboardphoto = null;
+            }
         }
+    }
+
+
+    public void updateLoginNavHeader(){
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+                String Email = dataSnapshot.child("email").getValue().toString();
+                String Username = dataSnapshot.child("username").getValue().toString();
+
+                dashboardemail.setText(Email);
+                dashboardname.setText(Username);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
 
 
     }
+
+
+    @Override
+    public void onBackPressed() {
+
+        if (backPressedTime + 2000 > System.currentTimeMillis()) {
+            backToast.cancel();
+            super.onBackPressed();
+            return;
+        } else {
+            backToast = Toast.makeText(getBaseContext(), "Press back again to exit", Toast.LENGTH_SHORT);
+            backToast.show();
+        }
+
+        backPressedTime = System.currentTimeMillis();
+        finish();
+
+    }
+
+
+    public void onMessageReceived(RemoteMessage remoteMessage) {
+        showNotification(remoteMessage.getNotification().getBody());
+    }
+
+    public void showNotification(String message) {
+        PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, Notification.class), 0);
+        android.app.Notification notification = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.notification_image)
+                .setContentTitle("News n Events")
+                .setContentText(message)
+                .setContentIntent(pi)
+                .setAutoCancel(true)
+                .build();
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(0, notification);
+    }
+
+
 
 }

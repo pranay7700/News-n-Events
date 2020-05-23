@@ -7,23 +7,24 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home"
-            android:title="Home" />
+            android:title="@string/menu_home" />
         <item
             android:id="@+id/nav_events"
             android:icon="@drawable/ic_events"
-            android:title="Events" />
+            android:title="@string/menu_events" />
         <item
             android:id="@+id/nav_news"
             android:icon="@drawable/ic_news"
-            android:title="News" />
+            android:title="@string/menu_news" />
     </group>
 
-    <item android:title="Profile">
+    <item android:title="App Development Team">
         <menu>
             <item
-                android:id="@+id/nav_userprofile"
-                android:icon="@drawable/ic_userprofile"
-                android:title="User Profile" />
+                android:id="@+id/nav_developers"
+                android:icon="@drawable/ic_developers"
+                android:title="@string/menu_developers" />
+
         </menu>
     </item>
 

@@ -3,13 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_notification"
-        android:orderInCategory="100"
-        android:title="Notifications"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_notifications"/>
-
-    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="Settings"

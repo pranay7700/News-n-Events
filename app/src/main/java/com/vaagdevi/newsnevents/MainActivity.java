@@ -197,6 +197,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            //firebaseAuthWithGoogle(account.getIdToken());
             // Signed in successfully, show authenticated UI.
             startActivity(new Intent(MainActivity.this, Dashboard.class));
         } catch (ApiException e) {
@@ -219,8 +220,5 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         }
         super.onStart();
     }
-
-
-
 
 }

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Developers.Developers">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/developer_photo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="55dp"
+        android:src="@drawable/developer_photo" />
+
+    <TextView
+        android:id="@+id/developer_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="55dp"
+        android:layout_marginRight="56dp"
+        android:text="Udayagiri Pranay"
+        android:textColor="#000"
+        android:textSize="25dp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/developer_instagramBTN"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="115dp"
+        android:layout_marginEnd="220dp"
+        android:autoLink="all"
+        android:clickable="true"
+        android:src="@drawable/instagram_icon" />
+
+    <ImageView
+        android:id="@+id/developer_gmailBTN"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="115dp"
+        android:layout_marginEnd="145dp"
+        android:autoLink="all"
+        android:clickable="true"
+        android:src="@drawable/gmail_icon" />
+
+    <ImageView
+        android:id="@+id/developer_phoneBTN"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="115dp"
+        android:layout_marginEnd="70dp"
+        android:autoLink="all"
+        android:clickable="true"
+        android:src="@drawable/phone_icon_3" />
+
+
+</RelativeLayout>

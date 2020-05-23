@@ -1,16 +1,21 @@
 package com.vaagdevi.newsnevents;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatCheckBox;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,9 +32,8 @@ public class Registration extends AppCompatActivity {
 
     EditText Email;
     EditText Username;
-    EditText Password;
-    EditText Confirmpassword;
     EditText Mobilenumber;
+    EditText Password;
 
     String Emailpattern = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
     String Passwordvalidate = "^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$";
@@ -46,9 +50,9 @@ public class Registration extends AppCompatActivity {
 
         Email=(EditText)findViewById(R.id.etemail);
         Username=(EditText)findViewById(R.id.etusername);
-        Password=(EditText)findViewById(R.id.etpassword);
-        Confirmpassword=(EditText)findViewById(R.id.etconfirmpassword);
         Mobilenumber=(EditText)findViewById(R.id.etmobilenumber);
+        Password=(EditText)findViewById(R.id.etpassword);
+
 
         signup=(Button)findViewById(R.id.btnsignup);
 
@@ -61,17 +65,35 @@ public class Registration extends AppCompatActivity {
         databaseref=FirebaseDatabase.getInstance().getReference("News n Events");
 
 
+        @SuppressLint("WrongViewCast") final AppCompatCheckBox checkBox = (AppCompatCheckBox)findViewById(R.id.show_hide_password);
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (isChecked) {
+                    // show password
+                    Password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                } else {
+                    // hide password
+                    Password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+
+            }
+        });
+
+
+
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 final String email=Email.getText().toString();
                 final String username=Username.getText().toString();
-                final String password=Password.getText().toString();
-                final String confirmpassword=Confirmpassword.getText().toString();
                 final String mobilenumber=Mobilenumber.getText().toString();
+                final String password=Password.getText().toString();
 
-                if (email.isEmpty()&&username.isEmpty()&&password.isEmpty()&&confirmpassword.isEmpty()&&mobilenumber.isEmpty())
+
+                if (email.isEmpty()&&username.isEmpty()&&mobilenumber.isEmpty()&&password.isEmpty())
                 {
                     Toast.makeText(Registration.this,"Empty Fields",Toast.LENGTH_SHORT).show();
                 }
@@ -85,23 +107,21 @@ public class Registration extends AppCompatActivity {
                     Username.setError("Username is Required");
                     Username.requestFocus();
                 }
-                else if (password.isEmpty())
-                {
-                    Password.setError("Password is Required");
-                    Password.requestFocus();
-                }
-                else if (confirmpassword.isEmpty())
-                {
-                    Confirmpassword.setError("Confirm Password is Required");
-                    Confirmpassword.requestFocus();
-                }
+
+
                 else if (mobilenumber.isEmpty())
                 {
                     Mobilenumber.setError("Mobile Number is Required");
                     Mobilenumber.requestFocus();
                 }
 
-                else if (!(email.isEmpty()&&username.isEmpty()&&password.isEmpty()&&confirmpassword.isEmpty()&&mobilenumber.isEmpty()))
+                else if (password.isEmpty())
+                {
+                    Password.setError("Password is Required");
+                    Password.requestFocus();
+                }
+
+                else if (!(email.isEmpty()&&username.isEmpty()&&mobilenumber.isEmpty()&&password.isEmpty()))
                 {
 
                         mAuth.createUserWithEmailAndPassword(email,password)
@@ -112,7 +132,7 @@ public class Registration extends AppCompatActivity {
                                     if ((task.isSuccessful())) {
                                         // Sign in success, update UI with the signed-in user's information
 
-                                        Regdatabase regdatabase = new Regdatabase(email, username, password, confirmpassword, mobilenumber);
+                                        Regdatabase regdatabase = new Regdatabase(email, username, mobilenumber, password);
 
                                         FirebaseDatabase.getInstance().getReference(databaseref.getKey()).child(mAuth.getCurrentUser().getUid())
                                                 .setValue(regdatabase).addOnCompleteListener(new OnCompleteListener<Void>() {
