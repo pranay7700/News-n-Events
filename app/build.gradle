@@ -8,9 +8,9 @@ android {
     signingConfigs {
         release {
             storeFile file('C:/Users/Praneeth/AndroidStudioProjects/NewsnEvents/NewsnEventsKeyStore.jks')
-            storePassword "pranay@7700"
+            storePassword "NewsnEventsKeyStore"
             keyAlias "NewsnEventsKeyStore"
-            keyPassword "pranay@7700"
+            keyPassword "NewsnEventsKeyStore"
         }
     }
 

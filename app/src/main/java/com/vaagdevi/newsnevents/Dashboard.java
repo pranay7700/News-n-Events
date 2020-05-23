@@ -61,7 +61,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     GoogleSignInClient mGoogleSignInClient;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
-    String currentId;
+    private String currentId;
 
 
     TextView dashboardname;

@@ -7,7 +7,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/vaagevi_logo"
+        android:icon="@drawable/vaagdevi_logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -15,7 +15,6 @@
         <activity android:name=".Workshops"></activity>
         <activity android:name=".GuestLectures" />
         <activity android:name=".Profile" />
-        <activity android:name=".Notifications" />
         <activity android:name=".Settings" />
         <activity
             android:name=".Dashboard"
@@ -37,7 +36,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".UserProfile.UserProfile$Notification">
+        <service android:name=".Notifications">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
