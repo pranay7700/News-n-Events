@@ -35,7 +35,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -84,18 +83,19 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         currentId = firebaseAuth.getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("News n Events").child(currentId);
 
-
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
 
+        FloatingActionButton fab = findViewById(R.id.faqs);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                Intent telegramintent = new Intent(Intent.ACTION_VIEW);
+                telegramintent.setData(Uri.parse("https://t.me/joinchat/LS4qKRRpAosY0QwEPTuLQg"));
+                startActivity(telegramintent);
+
             }
         });
 
@@ -134,7 +134,6 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
 
         int id = item.getItemId();
 
@@ -227,10 +226,11 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-
+                String ProfileImage = dataSnapshot.child("profileimage").getValue().toString();
                 String Email = dataSnapshot.child("email").getValue().toString();
                 String Username = dataSnapshot.child("username").getValue().toString();
 
+                Glide.with(Dashboard.this).load(ProfileImage).placeholder(R.drawable.profile_image3).into(dashboardphoto);
                 dashboardemail.setText(Email);
                 dashboardname.setText(Username);
 

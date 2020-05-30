@@ -1,7 +1,11 @@
 package com.vaagdevi.newsnevents;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -25,9 +29,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 
 public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
@@ -36,6 +42,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
 
     int RC_SIGN_IN = 0;
     GoogleSignInClient mGoogleSignInClient;
+    private ProgressDialog progressDialog;
 
 
     EditText Emailid;
@@ -60,10 +67,10 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         forgotpassid = (TextView) findViewById(R.id.TVForgot);
 
         mAuth = FirebaseAuth.getInstance();
+        progressDialog = new ProgressDialog(MainActivity.this);
 
 
-
-        @SuppressLint("WrongViewCast") final AppCompatCheckBox checkBox = (AppCompatCheckBox)findViewById(R.id.show_hide_password);
+        @SuppressLint("WrongViewCast") final AppCompatCheckBox checkBox = (AppCompatCheckBox) findViewById(R.id.show_hide_password);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -99,10 +106,14 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         });
 
 
-
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                progressDialog.setTitle("Logging In");
+                progressDialog.setMessage("Please wait...");
+                checkConnection();
+
 
                 String emailid = Emailid.getText().toString();
                 final String passid = Passid.getText().toString();
@@ -118,6 +129,8 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                     Passid.requestFocus();
                 } else if (!(emailid.isEmpty() && passid.isEmpty())) {
 
+                    progressDialog.show();
+
                     mAuth.signInWithEmailAndPassword(emailid, passid)
                             .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -128,12 +141,9 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                                         Toast.makeText(MainActivity.this, "Logined Successfully", Toast.LENGTH_SHORT).show();
                                         startActivity(new Intent(MainActivity.this, Dashboard.class));
 
-
-
                                     } else {
                                         // If sign in fails, display a message to the user.
-
-                                        Toast.makeText(MainActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                                        progressDialog.dismiss();
 
                                     }
 
@@ -167,9 +177,6 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
             }
         });
 
-
-
-
     }
 
 
@@ -177,6 +184,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -190,7 +198,6 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
             handleSignInResult(task);
 
 
-
         }
     }
 
@@ -198,8 +205,12 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             //firebaseAuthWithGoogle(account.getIdToken());
+            firebaseAuthWithGoogle(account);
             // Signed in successfully, show authenticated UI.
+            Toast.makeText(MainActivity.this, "Logined Successfully", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(MainActivity.this, Dashboard.class));
+
+
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
@@ -220,5 +231,34 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         }
         super.onStart();
     }
+
+
+    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+        //...
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        //...
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    public void checkConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(
+                Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+
+        if (null == activeNetwork) {
+
+            progressDialog.dismiss();
+            Toast.makeText(MainActivity.this, "No Internet Connection!", Toast.LENGTH_LONG).show();
+        }
+    }
+
 
 }

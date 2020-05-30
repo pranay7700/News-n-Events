@@ -1,7 +1,11 @@
 package com.vaagdevi.newsnevents;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -34,38 +38,34 @@ public class Registration extends AppCompatActivity {
     EditText Username;
     EditText Mobilenumber;
     EditText Password;
+    Button signup;
+    TextView alreadyregistered;
+    private ProgressDialog progressDialog;
 
     String Emailpattern = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
     String Passwordvalidate = "^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$";
-
-
-    Button signup;
-
-    TextView alreadyregistered;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
-        Email=(EditText)findViewById(R.id.etemail);
-        Username=(EditText)findViewById(R.id.etusername);
-        Mobilenumber=(EditText)findViewById(R.id.etmobilenumber);
-        Password=(EditText)findViewById(R.id.etpassword);
+        Email = (EditText) findViewById(R.id.etemail);
+        Username = (EditText) findViewById(R.id.etusername);
+        Mobilenumber = (EditText) findViewById(R.id.etmobilenumber);
+        Password = (EditText) findViewById(R.id.etpassword);
 
+        signup = (Button) findViewById(R.id.btnsignup);
 
-        signup=(Button)findViewById(R.id.btnsignup);
-
-        alreadyregistered=(TextView)findViewById(R.id.tvalreadyregistered);
+        alreadyregistered = (TextView) findViewById(R.id.tvalreadyregistered);
 
         final FirebaseAuth mAuth;
         mAuth = FirebaseAuth.getInstance();
+        progressDialog = new ProgressDialog(Registration.this);
+        databaseref = FirebaseDatabase.getInstance().getReference("News n Events");
 
 
-        databaseref=FirebaseDatabase.getInstance().getReference("News n Events");
-
-
-        @SuppressLint("WrongViewCast") final AppCompatCheckBox checkBox = (AppCompatCheckBox)findViewById(R.id.show_hide_password);
+        @SuppressLint("WrongViewCast") final AppCompatCheckBox checkBox = (AppCompatCheckBox) findViewById(R.id.show_hide_password);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -82,65 +82,59 @@ public class Registration extends AppCompatActivity {
         });
 
 
-
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                final String email=Email.getText().toString();
-                final String username=Username.getText().toString();
-                final String mobilenumber=Mobilenumber.getText().toString();
-                final String password=Password.getText().toString();
+                final String email = Email.getText().toString();
+                final String username = Username.getText().toString();
+                final String mobilenumber = Mobilenumber.getText().toString();
+                final String password = Password.getText().toString();
+                final String rollno = "";
+                final String branch = "";
+                final String college = "";
+                final String address = "";
+                final String profileimage = "";
 
 
-                if (email.isEmpty()&&username.isEmpty()&&mobilenumber.isEmpty()&&password.isEmpty())
-                {
-                    Toast.makeText(Registration.this,"Empty Fields",Toast.LENGTH_SHORT).show();
-                }
-                else if (email.isEmpty())
-                {
+                progressDialog.setTitle("Signing Up");
+                progressDialog.setMessage("Please wait...");
+                checkConnection();
+
+
+                if (email.isEmpty() && username.isEmpty() && mobilenumber.isEmpty() && password.isEmpty()) {
+                    Toast.makeText(Registration.this, "Empty Fields", Toast.LENGTH_SHORT).show();
+                } else if (email.isEmpty()) {
                     Email.setError("Email is Required");
                     Email.requestFocus();
-                }
-                else if (username.isEmpty())
-                {
+                } else if (username.isEmpty()) {
                     Username.setError("Username is Required");
                     Username.requestFocus();
-                }
-
-
-                else if (mobilenumber.isEmpty())
-                {
+                } else if (mobilenumber.isEmpty()) {
                     Mobilenumber.setError("Mobile Number is Required");
                     Mobilenumber.requestFocus();
-                }
-
-                else if (password.isEmpty())
-                {
+                } else if (password.isEmpty()) {
                     Password.setError("Password is Required");
                     Password.requestFocus();
-                }
-
-                else if (!(email.isEmpty()&&username.isEmpty()&&mobilenumber.isEmpty()&&password.isEmpty()))
-                {
-
-                        mAuth.createUserWithEmailAndPassword(email,password)
+                } else if (!(email.isEmpty() && username.isEmpty() && mobilenumber.isEmpty() && password.isEmpty())) {
+                    progressDialog.show();
+                    mAuth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(Registration.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
 
                                     if ((task.isSuccessful())) {
                                         // Sign in success, update UI with the signed-in user's information
-
-                                        Regdatabase regdatabase = new Regdatabase(email, username, mobilenumber, password);
+                                        Regdatabase regdatabase = new Regdatabase( email, username, mobilenumber, password, rollno, branch, college, address, profileimage);
 
                                         FirebaseDatabase.getInstance().getReference(databaseref.getKey()).child(mAuth.getCurrentUser().getUid())
                                                 .setValue(regdatabase).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
 
+                                                progressDialog.dismiss();
                                                 startActivity(new Intent(Registration.this, MainActivity.class));
-                                                Toast.makeText(Registration.this, "Signing Up....", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(Registration.this, "Signed Up Successfully!!!", Toast.LENGTH_SHORT).show();
                                                 finish();
 
 
@@ -150,21 +144,18 @@ public class Registration extends AppCompatActivity {
 
                                     } else {
                                         // If sign in fails, display a message to the user.
-
-                                        Toast.makeText(Registration.this, "Authentication failed." + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                        progressDialog.dismiss();
+                                        Toast.makeText(Registration.this, "Email Already Exists", Toast.LENGTH_SHORT).show();
 
                                     }
-
 
 
                                 }
                             });
 
 
-                }
-                else
-                {
-                    Toast.makeText(Registration.this,"Sign Up Error",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(Registration.this, "Sign Up Error", Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -174,7 +165,7 @@ public class Registration extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(Registration.this,MainActivity.class));
+                startActivity(new Intent(Registration.this, MainActivity.class));
 
             }
         });
@@ -252,5 +243,17 @@ public class Registration extends AppCompatActivity {
         Toast.makeText(this, input, Toast.LENGTH_SHORT).show();
     }
 
+    public void checkConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(
+                Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+
+        if (null == activeNetwork) {
+
+            progressDialog.dismiss();
+            Toast.makeText(Registration.this, "Check Your Internet Connection!",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
 
 }

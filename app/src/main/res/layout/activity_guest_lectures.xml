@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_centerInParent="true"
-        android:text="No Guest Lectures At Present"
+        android:text="No Guest Lectures at Present"
         android:textSize="20dp"
         />
 

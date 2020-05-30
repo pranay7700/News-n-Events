@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:text="To"
             android:textColor="#FFF"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
 
         <TextView
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:text="News n Events"
             android:textColor="#FFF"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 

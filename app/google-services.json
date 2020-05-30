@@ -15,11 +15,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "1033253745707-6cgub9b3fiod2r41ejstsvos601ui214.apps.googleusercontent.com",
+          "client_id": "1033253745707-kddllp6d88edcurljbemndlui15n9ard.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.vaagdevi.newsnevents",
             "certificate_hash": "ed653819288d37d0dd5ee3d2b867c1c4e13da012"
+          }
+        },
+        {
+          "client_id": "1033253745707-tj42bei9817mraa5s2djahhf9fsorrot.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vaagdevi.newsnevents",
+            "certificate_hash": "1639fc965956f77b939e649cf911c8a983e2077e"
           }
         },
         {

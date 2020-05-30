@@ -8,55 +8,26 @@ public class Regdatabase {
     private FirebaseAuth firebaseauth;
     private FirebaseUser firebaseuser;
 
-    public String email,username,mobilenumber,password;
+    public String email, username, mobilenumber, password, rollno, branch, college, address, profileimage;
 
 
-    public Regdatabase(String email,String username,String mobilenumber,String password)
-    {
+    public Regdatabase(String email, String username, String mobilenumber, String password, String rollno, String branch, String college, String address, String profileimage) {
 
-        this.email=email;
-        this.username=username;
-        this.mobilenumber=mobilenumber;
-        this.password=password;
+        this.email = email;
+        this.username = username;
+        this.mobilenumber = mobilenumber;
+        this.password = password;
+        this.rollno = rollno;
+        this.branch = branch;
+        this.college = college;
+        this.address = address;
+        this.profileimage = profileimage;
 
 
     }
 
     public Regdatabase() {
 
-    }
-
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getMobilenumber() {
-        return mobilenumber;
-    }
-
-    public void setMobilenumber(String mobilenumber) {
-        this.mobilenumber = mobilenumber;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
 

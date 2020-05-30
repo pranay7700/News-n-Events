@@ -20,7 +20,7 @@
     <fragment
         android:id="@+id/nav_events"
         android:name="com.vaagdevi.newsnevents.Events.Events"
-        android:label="Events"
+        android:label="@string/menu_events"
         tools:layout="@layout/events_fragment">
 
         <action
@@ -37,13 +37,13 @@
     <fragment
         android:id="@+id/nav_news"
         android:name="com.vaagdevi.newsnevents.News.News"
-        android:label="News"
+        android:label="@string/menu_news"
         tools:layout="@layout/news_fragment" />
 
     <fragment
         android:id="@+id/nav_developers"
         android:name="com.vaagdevi.newsnevents.Developers.Developers"
-        android:label="Developers"
+        android:label="@string/menu_developers"
         tools:layout="@layout/developers_fragment" />
 
     <activity
@@ -69,8 +69,5 @@
         android:name="com.vaagdevi.newsnevents.Workshops"
         android:label="Workshops"
         tools:layout="@layout/activity_workshops" />
-
-
-
 
 </navigation>
