@@ -81,7 +81,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
         firebaseAuth = FirebaseAuth.getInstance();
         currentId = firebaseAuth.getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("News n Events").child(currentId);
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("News n Events Users").child(currentId);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

@@ -1,6 +1,7 @@
 package com.vaagdevi.newsnevents.ui.home;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -150,5 +151,11 @@ public class HomeFragment extends Fragment {
 
     private FragmentManager getSupportFragmentManager() {
         return null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
     }
 }

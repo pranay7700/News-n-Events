@@ -65,6 +65,7 @@ public class Profile extends AppCompatActivity {
     String downloadUrl;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +74,7 @@ public class Profile extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         currentId = firebaseAuth.getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("News n Events").child(currentId);
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("News n Events Users").child(currentId);
         progressDialog = new ProgressDialog(this);
         storageReference = FirebaseStorage.getInstance().getReference("Profile Images").child(currentId +".jpg");
 
@@ -166,6 +167,7 @@ public class Profile extends AppCompatActivity {
 
                 //Picasso.with(getApplicationContext()).load(ProfileImage).placeholder(R.drawable.profile_image3).into(profilephoto);
                 Glide.with(Profile.this).load(ProfileImage).placeholder(R.drawable.profile_image3).into(profilephoto);
+
 
                 GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestEmail()

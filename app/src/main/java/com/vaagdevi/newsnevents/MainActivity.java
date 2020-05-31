@@ -137,10 +137,8 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if ((task.isSuccessful())) {
                                         // Sign in success, update UI with the signed-in user's information
-
                                         Toast.makeText(MainActivity.this, "Logined Successfully", Toast.LENGTH_SHORT).show();
                                         startActivity(new Intent(MainActivity.this, Dashboard.class));
-
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         progressDialog.dismiss();

@@ -9,7 +9,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -27,8 +26,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.regex.Pattern;
 
 public class Registration extends AppCompatActivity {
 
@@ -62,7 +59,7 @@ public class Registration extends AppCompatActivity {
         final FirebaseAuth mAuth;
         mAuth = FirebaseAuth.getInstance();
         progressDialog = new ProgressDialog(Registration.this);
-        databaseref = FirebaseDatabase.getInstance().getReference("News n Events");
+        databaseref = FirebaseDatabase.getInstance().getReference("News n Events Users");
 
 
         @SuppressLint("WrongViewCast") final AppCompatCheckBox checkBox = (AppCompatCheckBox) findViewById(R.id.show_hide_password);
@@ -172,7 +169,7 @@ public class Registration extends AppCompatActivity {
 
     }
 
-    private static final Pattern PASSWORD_PATTERN =
+    /*private static final Pattern PASSWORD_PATTERN =
             Pattern.compile("^" +
                     //"(?=.*[0-9])" +         //at least 1 digit
                     //"(?=.*[a-z])" +         //at least 1 lower case letter
@@ -242,7 +239,7 @@ public class Registration extends AppCompatActivity {
 
         Toast.makeText(this, input, Toast.LENGTH_SHORT).show();
     }
-
+*/
     public void checkConnection() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(
                 Context.CONNECTIVITY_SERVICE);

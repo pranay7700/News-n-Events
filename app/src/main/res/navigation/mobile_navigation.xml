@@ -9,6 +9,7 @@
         android:id="@+id/nav_home"
         android:name="com.vaagdevi.newsnevents.ui.home.HomeFragment"
         android:label="@string/menu_home"
+        android:screenOrientation="portrait"
         tools:layout="@layout/fragment_home">
 
         <action

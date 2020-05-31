@@ -1,12 +1,8 @@
 package com.vaagdevi.newsnevents;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
 public class Regdatabase {
 
-    private FirebaseAuth firebaseauth;
-    private FirebaseUser firebaseuser;
+
 
     public String email, username, mobilenumber, password, rollno, branch, college, address, profileimage;
 
