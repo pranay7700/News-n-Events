@@ -9,5 +9,7 @@
     <color name="colorPurpleT">#64983cff</color>
     <color name="colorBlue">#2FB4FF</color>
     <color name="colorBlueT">#642fb4ff</color>
+    <color name="colorBlack">#000</color>
+
 
 </resources>

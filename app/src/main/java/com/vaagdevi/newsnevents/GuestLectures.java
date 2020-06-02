@@ -31,12 +31,12 @@ public class GuestLectures extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.guestlectureRV);
         recyclerView.setLayoutManager( new LinearLayoutManager(this));
 
-
+        list = new ArrayList<GuestLecturesRegdatabase>();
         reference = FirebaseDatabase.getInstance().getReference().child("Guest Lectures");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                list = new ArrayList<GuestLecturesRegdatabase>();
+
                 for(DataSnapshot dataSnapshot1: dataSnapshot.getChildren())
                 {
                     GuestLecturesRegdatabase guestLecturesRegdatabase = dataSnapshot1.getValue(GuestLecturesRegdatabase.class);

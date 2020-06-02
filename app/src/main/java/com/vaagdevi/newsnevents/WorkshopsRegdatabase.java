@@ -2,17 +2,18 @@ package com.vaagdevi.newsnevents;
 
 public class WorkshopsRegdatabase {
 
-    private String name;
-    private String description;
-    private String image;
-    private boolean permission;
+    public String name, description, image, place, date, time;
 
+    public WorkshopsRegdatabase() {
+    }
 
-    public WorkshopsRegdatabase(String name, String description, String image, boolean permission) {
+    public WorkshopsRegdatabase(String name, String description, String image, String place, String date, String time) {
         this.name = name;
         this.description = description;
         this.image = image;
-        this.permission = permission;
+        this.place = place;
+        this.date = date;
+        this.time = time;
     }
 
     public String getName() {
@@ -39,11 +40,27 @@ public class WorkshopsRegdatabase {
         this.image = image;
     }
 
-    public boolean isPermission() {
-        return permission;
+    public String getPlace() {
+        return place;
     }
 
-    public void setPermission(boolean permission) {
-        this.permission = permission;
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

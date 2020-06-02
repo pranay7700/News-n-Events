@@ -2,17 +2,18 @@ package com.vaagdevi.newsnevents;
 
 public class GuestLecturesRegdatabase {
 
-    private String name;
-    private String email;
-    private String profilepic;
-    private Boolean permission;
+    public String name, email, profilepic, date, time, description;
 
+    public GuestLecturesRegdatabase() {
+    }
 
-    public GuestLecturesRegdatabase(String name, String email, String profilepic, Boolean permission) {
+    public GuestLecturesRegdatabase(String name, String email, String profilepic, String date, String time, String description) {
         this.name = name;
         this.email = email;
         this.profilepic = profilepic;
-        this.permission = permission;
+        this.date = date;
+        this.time = time;
+        this.description = description;
     }
 
     public String getName() {
@@ -39,11 +40,27 @@ public class GuestLecturesRegdatabase {
         this.profilepic = profilepic;
     }
 
-    public Boolean getPermission() {
-        return permission;
+    public String getDate() {
+        return date;
     }
 
-    public void setPermission(Boolean permission) {
-        this.permission = permission;
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

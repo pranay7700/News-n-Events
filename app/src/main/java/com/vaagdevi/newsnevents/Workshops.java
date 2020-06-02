@@ -31,11 +31,12 @@ public class Workshops extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.workshopsRV);
         recyclerView.setLayoutManager( new LinearLayoutManager(this));
 
+        list = new ArrayList<WorkshopsRegdatabase>();
         reference = FirebaseDatabase.getInstance().getReference().child("Workshops");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                list = new ArrayList<WorkshopsRegdatabase>();
+
                 for(DataSnapshot dataSnapshot1: dataSnapshot.getChildren())
                 {
                     WorkshopsRegdatabase p = dataSnapshot1.getValue(WorkshopsRegdatabase.class);

@@ -4,10 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,11 +17,11 @@ import java.util.ArrayList;
 public class GuestLecturesMyAdapter extends RecyclerView.Adapter<GuestLecturesMyAdapter.MyViewHolder> {
 
     Context context;
-    ArrayList<GuestLecturesRegdatabase> profiles;
+    ArrayList<GuestLecturesRegdatabase> guestLecturesRegdatabase;
 
-    public GuestLecturesMyAdapter(Context c, ArrayList<GuestLecturesRegdatabase> p){
+    public GuestLecturesMyAdapter(Context c, ArrayList<GuestLecturesRegdatabase> g){
         context = c;
-        profiles = p;
+        guestLecturesRegdatabase = g;
     }
 
     @NonNull
@@ -37,44 +35,37 @@ public class GuestLecturesMyAdapter extends RecyclerView.Adapter<GuestLecturesMy
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
-        holder.name.setText(profiles.get(position).getName());
-        holder.email.setText(profiles.get(position).getEmail());
-        Picasso.get().load(profiles.get(position).getProfilepic()).into(holder.profilePic);
-        if(profiles.get(position).getPermission()) {
-            holder.checkDetails.setVisibility(View.VISIBLE);
-            holder.onClick(position);
-        }
+        Picasso.get().load(guestLecturesRegdatabase.get(position).getProfilepic()).into(holder.profilePic);
+        holder.name.setText(guestLecturesRegdatabase.get(position).getName());
+        holder.email.setText(guestLecturesRegdatabase.get(position).getEmail());
+        holder.date.setText(guestLecturesRegdatabase.get(position).getDate());
+        holder.time.setText(guestLecturesRegdatabase.get(position).getTime());
+        holder.description.setText(guestLecturesRegdatabase.get(position).getDescription());
+
 
     }
 
     @Override
     public int getItemCount() {
-        return profiles.size();
+        return guestLecturesRegdatabase.size();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView name, email;
+        TextView name, email,date,time,description;
         ImageView profilePic;
-        Button checkDetails;
+
 
         public MyViewHolder(View itemView) {
             super(itemView);
+            profilePic = (ImageView) itemView.findViewById(R.id.guestlecture_profilepicIV);
             name = (TextView) itemView.findViewById(R.id.guestlecture_nameTV);
             email = (TextView) itemView.findViewById(R.id.guestlecture_emailTV);
-            profilePic = (ImageView) itemView.findViewById(R.id.guestlecture_profilepicIV);
-            checkDetails = (Button) itemView.findViewById(R.id.guestlecture_checkdetailsBTN);
+            date = (TextView) itemView.findViewById(R.id.guestlecture_dateTV);
+            time = (TextView) itemView.findViewById(R.id.guestlecture_timeTV);
+            description = (TextView) itemView.findViewById(R.id.guestlecture_descTV);
 
         }
 
-        public void onClick(final int position)
-        {
-            checkDetails.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(context, position+" is clicked", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
     }
 
 }

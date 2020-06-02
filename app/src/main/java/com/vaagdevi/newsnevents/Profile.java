@@ -19,10 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -49,7 +46,7 @@ public class Profile extends AppCompatActivity {
     private static final int PIC_CROP = 0;
     GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference databaseReference;
+    private DatabaseReference databaseReference, databaseref;
 
     private ProgressDialog progressDialog;
     private StorageReference storageReference;
@@ -57,13 +54,12 @@ public class Profile extends AppCompatActivity {
     final static int GalleryPick = 1;
 
     CircleImageView profilephoto;
-    EditText profileusername,profileemail,profilepassword,profilemobilenumber,profilerollno,profilebranch,profilecollege,profileaddress;
-    String UsernameStr,EmailStr,PasswordStr,MobileNumberStr,RollNoStr,BranchStr,CollegeStr,AddressStr;
+    EditText profileusername, profileemail, profilepassword, profilemobilenumber, profilerollno, profilebranch, profilecollege, profileaddress;
+    String UsernameStr, EmailStr, PasswordStr, MobileNumberStr, RollNoStr, BranchStr, CollegeStr, AddressStr;
     Spinner profileyear;
     String currentId;
     FloatingActionButton profileeditinfo, profileeditimage;
     String downloadUrl;
-
 
 
     @Override
@@ -75,17 +71,19 @@ public class Profile extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         currentId = firebaseAuth.getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("News n Events Users").child(currentId);
+        databaseref = FirebaseDatabase.getInstance().getReference().child("Google Users").child(currentId);
         progressDialog = new ProgressDialog(this);
-        storageReference = FirebaseStorage.getInstance().getReference("Profile Images").child(currentId +".jpg");
+        storageReference = FirebaseStorage.getInstance().getReference("Profile Images").child(currentId + ".jpg");
 
         profilephoto = (CircleImageView) findViewById(R.id.profile_photo);
         profileeditinfo = (FloatingActionButton) findViewById(R.id.profile_editinfo);
         profileeditimage = (FloatingActionButton) findViewById(R.id.profile_editimage);
         profileusername = (EditText) findViewById(R.id.profile_usernameET);
         profileemail = (EditText) findViewById(R.id.profile_emailET);
-        profilepassword = (EditText) findViewById(R.id.profile_passwordET);
+        profilepassword
+                = (EditText) findViewById(R.id.profile_passwordET);
         profilemobilenumber = (EditText) findViewById(R.id.profile_mobilenumberET);
-        profilerollno =  (EditText) findViewById(R.id.profile_rollnoET);
+        profilerollno = (EditText) findViewById(R.id.profile_rollnoET);
         profileyear = (Spinner) findViewById(R.id.profile_yearSPI);
         profilebranch = (EditText) findViewById(R.id.profile_branchET);
         profilecollege = (EditText) findViewById(R.id.profile_collegeET);
@@ -138,76 +136,11 @@ public class Profile extends AppCompatActivity {
             }
         });
 
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @SuppressLint("ResourceType")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-
-
-                String Email = dataSnapshot.child("email").getValue().toString();
-                String Username = dataSnapshot.child("username").getValue().toString();
-                String MobileNumber = dataSnapshot.child("mobilenumber").getValue().toString();
-                String Password = dataSnapshot.child("password").getValue().toString();
-                String RollNo = dataSnapshot.child("rollno").getValue().toString();
-                String Branch = dataSnapshot.child("branch").getValue().toString();
-                String College = dataSnapshot.child("college").getValue().toString();
-                String Address = dataSnapshot.child("address").getValue().toString();
-                String ProfileImage = dataSnapshot.child("profileimage").getValue().toString();
-
-                profileemail.setText(Email);
-                profileusername.setText(Username);
-                profilemobilenumber.setText(MobileNumber);
-                profilepassword.setText(Password);
-                profilerollno.setText(RollNo);
-                profilebranch.setText(Branch);
-                profilecollege.setText(College);
-                profileaddress.setText(Address);
-
-                //Picasso.with(getApplicationContext()).load(ProfileImage).placeholder(R.drawable.profile_image3).into(profilephoto);
-                Glide.with(Profile.this).load(ProfileImage).placeholder(R.drawable.profile_image3).into(profilephoto);
-
-
-                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestEmail()
-                        .build();
-
-                // Build a GoogleSignInClient with the options specified by gso.
-                mGoogleSignInClient = GoogleSignIn.getClient(Profile.this, gso);
-
-                GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(Profile.this);
-                if (acct != null) {
-                    String personName = acct.getDisplayName();
-                    String personGivenName = acct.getGivenName();
-                    String personFamilyName = acct.getFamilyName();
-                    String personEmail = acct.getEmail();
-                    String personId = acct.getId();
-
-                    Uri personPhoto = acct.getPhotoUrl();
-
-                    profileemail.setText(personEmail);
-                    profileusername.setText(personName);
-                    profilemobilenumber.setText(null);
-                    profilepassword.setText(null);
-
-                    if (personPhoto != null) {
-
-                        Glide.with(Profile.this).load(personPhoto).into(profilephoto);
-
-                    } else {
-                        profilephoto.setImageResource(R.drawable.profile_image3);
-                    }
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-
-        });
+        if (findViewById(R.id.BTNlogin) != null) {
+            loginprofiledata();
+        } else {
+            //googleprofiledata();
+        }
     }
 
 
@@ -264,7 +197,7 @@ public class Profile extends AppCompatActivity {
             Uri imageUri = data.getData();
             CropImage.activity()
                     .setGuidelines(CropImageView.Guidelines.ON)
-                    .setAspectRatio(1,1)
+                    .setAspectRatio(1, 1)
                     .start(this);
         }
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
@@ -297,11 +230,10 @@ public class Profile extends AppCompatActivity {
                                                 if (task.isSuccessful()) {
                                                     Toast.makeText(Profile.this, "Profile Image Updated", Toast.LENGTH_SHORT).show();
                                                     progressDialog.dismiss();
-                                                }
-                                                else {
+                                                } else {
                                                     progressDialog.dismiss();
                                                     String message = task.getException().getMessage();
-                                                    Toast.makeText(Profile.this, "Error Occurred !!! Try again "+message, Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(Profile.this, "Error Occurred !!! Try again " + message, Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         });
@@ -326,4 +258,104 @@ public class Profile extends AppCompatActivity {
         }
     }
 
+    public void loginprofiledata() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("ResourceType")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+                String Email = dataSnapshot.child("email").getValue().toString();
+                String Username = dataSnapshot.child("username").getValue().toString();
+                String MobileNumber = dataSnapshot.child("mobilenumber").getValue().toString();
+                String Password = dataSnapshot.child("password").getValue().toString();
+                String RollNo = dataSnapshot.child("rollno").getValue().toString();
+                String Branch = dataSnapshot.child("branch").getValue().toString();
+                String College = dataSnapshot.child("college").getValue().toString();
+                String Address = dataSnapshot.child("address").getValue().toString();
+                String ProfileImage = dataSnapshot.child("profileimage").getValue().toString();
+
+                profileemail.setText(Email);
+                profileusername.setText(Username);
+                profilemobilenumber.setText(MobileNumber);
+                profilepassword.setText(Password);
+                profilerollno.setText(RollNo);
+                profilebranch.setText(Branch);
+                profilecollege.setText(College);
+                profileaddress.setText(Address);
+
+                //Picasso.with(getApplicationContext()).load(ProfileImage).placeholder(R.drawable.profile_image3).into(profilephoto);
+                Glide.with(Profile.this).load(ProfileImage).placeholder(R.drawable.profile_image3).into(profilephoto);
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+
+    }
+
+    /*public void googleprofiledata() {
+
+        databaseref.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("ResourceType")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .build();
+
+                // Build a GoogleSignInClient with the options specified by gso.
+                mGoogleSignInClient = GoogleSignIn.getClient(Profile.this, gso);
+
+                GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(Profile.this);
+                if (acct != null) {
+                    String personName = acct.getDisplayName();
+                    String personGivenName = acct.getGivenName();
+                    String personFamilyName = acct.getFamilyName();
+                    String personEmail = acct.getEmail();
+                    String personId = acct.getId();
+
+                    Uri personPhoto = acct.getPhotoUrl();
+
+                    String GoogleMobileNumber = dataSnapshot.child("mobilenumber").getValue().toString();
+                    String GoogleRollNo = dataSnapshot.child("rollno").getValue().toString();
+                    String GoogleBranch = dataSnapshot.child("branch").getValue().toString();
+                    String GoogleCollege = dataSnapshot.child("college").getValue().toString();
+                    String GoogleAddress = dataSnapshot.child("address").getValue().toString();
+                    String GoogleProfileImage = dataSnapshot.child("profileimage").getValue().toString();
+
+
+                    profileemail.setText(personEmail);
+                    profileusername.setText(personName);
+                    profilemobilenumber.setText(GoogleMobileNumber);
+                    //profilepassword.setText(View.INVISIBLE);
+                    profilerollno.setText(GoogleRollNo);
+                    profilebranch.setText(GoogleBranch);
+                    profilecollege.setText(GoogleCollege);
+                    profileaddress.setText(GoogleAddress);
+
+                    Glide.with(Profile.this).load(personPhoto).placeholder(R.drawable.profile_image3).into(profilephoto);
+
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+
+
+    }
+*/
 }

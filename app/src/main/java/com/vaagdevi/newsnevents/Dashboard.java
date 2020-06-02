@@ -1,6 +1,5 @@
 package com.vaagdevi.newsnevents;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -28,11 +27,10 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,17 +44,14 @@ import com.google.firebase.messaging.RemoteMessage;
 import static com.vaagdevi.newsnevents.R.id.action_logout;
 import static com.vaagdevi.newsnevents.R.id.action_settings;
 import static com.vaagdevi.newsnevents.R.id.drawer_layout;
-import static com.vaagdevi.newsnevents.R.id.emailTV;
-import static com.vaagdevi.newsnevents.R.id.nameTV;
 import static com.vaagdevi.newsnevents.R.id.nav_home;
 import static com.vaagdevi.newsnevents.R.id.nav_host_fragment;
 import static com.vaagdevi.newsnevents.R.id.nav_view;
-import static com.vaagdevi.newsnevents.R.id.photoIV;
 
 public class Dashboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = "Dashboard" ;
-    private FirebaseAuth firebaseAuth;
+    private static final String TAG = "Dashboard";
+    private FirebaseAuth firebaseAuth,mAuth;
     GoogleSignInClient mGoogleSignInClient;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
@@ -80,8 +75,6 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         setContentView(R.layout.activity_dashboard);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        currentId = firebaseAuth.getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("News n Events Users").child(currentId);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -109,9 +102,12 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        updateGoogleNavheader();
+        if (findViewById(R.id.BTNlogin) != null) {
+            updateLoginNavHeader();
+        } else {
+           //updateGoogleNavheader();
+        }
 
-        updateLoginNavHeader();
     }
 
 
@@ -153,14 +149,28 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     }
 
 
-
     private void signOut() {
-        mGoogleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        GoogleSignInClient signInClient = GoogleSignIn.getClient(Dashboard.this, signInOptions);
+        signInClient.revokeAccess().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(Dashboard.this, "Successfully signed out", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(Dashboard.this, MainActivity.class));
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(Dashboard.this, mAuth.getCurrentUser().getDisplayName()+" logged out successfully.", Toast.LENGTH_SHORT).show();
+                mAuth.signOut();
+                Intent intent = new Intent(Dashboard.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
                 finish();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(Dashboard.this, "Unable to logout!", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
             }
         });
 
@@ -173,7 +183,38 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         return false;
     }
 
-    @SuppressLint("ResourceType")
+
+    public void updateLoginNavHeader() {
+
+        currentId = firebaseAuth.getCurrentUser().getUid();
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("News n Events Users").child(currentId);
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+                String ProfileImage = dataSnapshot.child("profileimage").getValue().toString();
+                String Email = dataSnapshot.child("email").getValue().toString();
+                String Username = dataSnapshot.child("username").getValue().toString();
+
+                Glide.with(Dashboard.this).load(ProfileImage).placeholder(R.drawable.profile_image3).into(dashboardphoto);
+                dashboardemail.setText(Email);
+                dashboardname.setText(Username);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+
+
+    }
+
+    /*@SuppressLint("ResourceType")
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void updateGoogleNavheader() {
 
@@ -217,34 +258,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 dashboardphoto = null;
             }
         }
-    }
-
-
-    public void updateLoginNavHeader(){
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                String ProfileImage = dataSnapshot.child("profileimage").getValue().toString();
-                String Email = dataSnapshot.child("email").getValue().toString();
-                String Username = dataSnapshot.child("username").getValue().toString();
-
-                Glide.with(Dashboard.this).load(ProfileImage).placeholder(R.drawable.profile_image3).into(dashboardphoto);
-                dashboardemail.setText(Email);
-                dashboardname.setText(Username);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-
-        });
-
-
-    }
+    }*/
 
 
     @Override
@@ -282,7 +296,6 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(0, notification);
     }
-
 
 
 }

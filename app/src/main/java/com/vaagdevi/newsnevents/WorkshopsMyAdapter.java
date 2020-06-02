@@ -4,10 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,10 +19,10 @@ public class WorkshopsMyAdapter extends RecyclerView.Adapter<WorkshopsMyAdapter.
     Context context;
     ArrayList<WorkshopsRegdatabase> workshopsRegdatabase;
 
-    public WorkshopsMyAdapter(Context c , ArrayList<WorkshopsRegdatabase> r)
+    public WorkshopsMyAdapter(Context c , ArrayList<WorkshopsRegdatabase> w)
     {
         context = c;
-        workshopsRegdatabase = r;
+        workshopsRegdatabase = w;
     }
 
     @NonNull
@@ -36,13 +34,13 @@ public class WorkshopsMyAdapter extends RecyclerView.Adapter<WorkshopsMyAdapter.
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
+        Picasso.get().load(workshopsRegdatabase.get(position).getImage()).into(holder.image);
         holder.name.setText(workshopsRegdatabase.get(position).getName());
         holder.description.setText(workshopsRegdatabase.get(position).getDescription());
-        Picasso.get().load(workshopsRegdatabase.get(position).getImage()).into(holder.image);
-        if(workshopsRegdatabase.get(position).isPermission()) {
-            holder.permission.setVisibility(View.VISIBLE);
-            holder.onClick(position);
-        }
+        holder.place.setText(workshopsRegdatabase.get(position).getPlace());
+        holder.date.setText(workshopsRegdatabase.get(position).getDate());
+        holder.time.setText(workshopsRegdatabase.get(position).getTime());
+
 
     }
 
@@ -53,25 +51,19 @@ public class WorkshopsMyAdapter extends RecyclerView.Adapter<WorkshopsMyAdapter.
 
     class MyViewHolder extends RecyclerView.ViewHolder
     {
-        TextView name,description;
+        TextView name,description,place,date,time;
         ImageView image;
-        Button permission;
         public MyViewHolder(View itemView) {
             super(itemView);
+            image = (ImageView) itemView.findViewById(R.id.workshops_imageIV);
             name = (TextView) itemView.findViewById(R.id.workshops_nameTV);
             description = (TextView) itemView.findViewById(R.id.workshops_descTV);
-            image = (ImageView) itemView.findViewById(R.id.workshops_imageIV);
-            permission = (Button) itemView.findViewById(R.id.workshops_checkdetailsBTN);
+            place = (TextView) itemView.findViewById(R.id.workshops_placeTV);
+            date = (TextView) itemView.findViewById(R.id.workshops_dateTV);
+            time = (TextView) itemView.findViewById(R.id.workshops_timeTV);
+
         }
-        public void onClick(final int position)
-        {
-            permission.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(context, position+" is clicked", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
+
     }
 
 }
