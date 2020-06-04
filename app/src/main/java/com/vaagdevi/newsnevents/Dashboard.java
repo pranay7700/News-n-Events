@@ -1,8 +1,6 @@
 package com.vaagdevi.newsnevents;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -18,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -27,10 +24,11 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,19 +37,21 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.messaging.RemoteMessage;
 
 import static com.vaagdevi.newsnevents.R.id.action_logout;
 import static com.vaagdevi.newsnevents.R.id.action_settings;
 import static com.vaagdevi.newsnevents.R.id.drawer_layout;
+import static com.vaagdevi.newsnevents.R.id.emailTV;
+import static com.vaagdevi.newsnevents.R.id.nameTV;
 import static com.vaagdevi.newsnevents.R.id.nav_home;
 import static com.vaagdevi.newsnevents.R.id.nav_host_fragment;
 import static com.vaagdevi.newsnevents.R.id.nav_view;
+import static com.vaagdevi.newsnevents.R.id.photoIV;
 
 public class Dashboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "Dashboard";
-    private FirebaseAuth firebaseAuth,mAuth;
+    private FirebaseAuth firebaseAuth, mAuth;
     GoogleSignInClient mGoogleSignInClient;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
@@ -65,7 +65,6 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     private long backPressedTime;
     private Toast backToast;
 
-
     private AppBarConfiguration mAppBarConfiguration;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -75,6 +74,9 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         setContentView(R.layout.activity_dashboard);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        currentId = firebaseAuth.getCurrentUser().getUid();
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("News n Events Users").child(currentId);
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -105,7 +107,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         if (findViewById(R.id.BTNlogin) != null) {
             updateLoginNavHeader();
         } else {
-           //updateGoogleNavheader();
+            updateGoogleNavheader();
         }
 
     }
@@ -150,27 +152,12 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
 
     private void signOut() {
-        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        GoogleSignInClient signInClient = GoogleSignIn.getClient(Dashboard.this, signInOptions);
-        signInClient.revokeAccess().addOnSuccessListener(new OnSuccessListener<Void>() {
+        mGoogleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
             @Override
-            public void onSuccess(Void aVoid) {
-                Toast.makeText(Dashboard.this, mAuth.getCurrentUser().getDisplayName()+" logged out successfully.", Toast.LENGTH_SHORT).show();
-                mAuth.signOut();
-                Intent intent = new Intent(Dashboard.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(Dashboard.this, "Successfully signed out", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(Dashboard.this, MainActivity.class));
                 finish();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(Dashboard.this, "Unable to logout!", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
             }
         });
 
@@ -186,13 +173,17 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
     public void updateLoginNavHeader() {
 
-        currentId = firebaseAuth.getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("News n Events Users").child(currentId);
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
+                NavigationView navigationView = (NavigationView) findViewById(nav_view);
+                View headerView = navigationView.getHeaderView(0);
+
+                dashboardname = (TextView) headerView.findViewById(nameTV);
+                dashboardemail = (TextView) headerView.findViewById(emailTV);
+                dashboardphoto = (ImageView) headerView.findViewById(photoIV);
 
                 String ProfileImage = dataSnapshot.child("profileimage").getValue().toString();
                 String Email = dataSnapshot.child("email").getValue().toString();
@@ -214,7 +205,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
     }
 
-    /*@SuppressLint("ResourceType")
+    @SuppressLint("ResourceType")
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void updateGoogleNavheader() {
 
@@ -250,15 +241,10 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             dashboardname.setText(personName);
             dashboardemail.setText(personEmail);
 
-            if (personPhoto != null) {
+            Glide.with(Dashboard.this).load(personPhoto).placeholder(R.drawable.profile_image3).into(dashboardphoto);
 
-                Glide.with(this).load(personPhoto).into(dashboardphoto);
-
-            } else {
-                dashboardphoto = null;
-            }
         }
-    }*/
+    }
 
 
     @Override
@@ -279,23 +265,6 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     }
 
 
-    public void onMessageReceived(RemoteMessage remoteMessage) {
-        showNotification(remoteMessage.getNotification().getBody());
-    }
-
-    public void showNotification(String message) {
-        PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, Notification.class), 0);
-        android.app.Notification notification = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.notification_image)
-                .setContentTitle("News n Events")
-                .setContentText(message)
-                .setContentIntent(pi)
-                .setAutoCancel(true)
-                .build();
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(0, notification);
-    }
 
 
 }

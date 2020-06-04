@@ -19,7 +19,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -139,7 +142,7 @@ public class Profile extends AppCompatActivity {
         if (findViewById(R.id.BTNlogin) != null) {
             loginprofiledata();
         } else {
-            //googleprofiledata();
+            googleprofiledata();
         }
     }
 
@@ -299,7 +302,7 @@ public class Profile extends AppCompatActivity {
 
     }
 
-    /*public void googleprofiledata() {
+    public void googleprofiledata() {
 
         databaseref.addValueEventListener(new ValueEventListener() {
             @SuppressLint("ResourceType")
@@ -357,5 +360,4 @@ public class Profile extends AppCompatActivity {
 
 
     }
-*/
 }

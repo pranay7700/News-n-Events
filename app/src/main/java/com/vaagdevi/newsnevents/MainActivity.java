@@ -53,8 +53,8 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
     EditText Emailid;
     EditText Passid;
     Button login;
-    Button facebook;
     Button google;
+    Button facebook;
     ImageButton register;
     TextView forgotpassid;
 
@@ -147,6 +147,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         progressDialog.dismiss();
+                                        Toast.makeText(MainActivity.this, "Unable to Login", Toast.LENGTH_SHORT).show();
 
                                     }
 
@@ -154,6 +155,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                             });
 
                 } else {
+                    progressDialog.dismiss();
                     Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
                 }
 
@@ -206,6 +208,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
+                progressDialog.dismiss();
                 Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_LONG).show();
 
                 // ...
