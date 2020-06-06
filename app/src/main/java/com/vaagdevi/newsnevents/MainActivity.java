@@ -144,6 +144,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                                         // Sign in success, update UI with the signed-in user's information
                                         Toast.makeText(MainActivity.this, "Logined Successfully", Toast.LENGTH_SHORT).show();
                                         startActivity(new Intent(MainActivity.this, Dashboard.class));
+                                        finish();
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         progressDialog.dismiss();
@@ -205,6 +206,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                 progressDialog.dismiss();
                 startActivity(new Intent(MainActivity.this, Dashboard.class));
                 firebaseAuthWithGoogle(account);
+                finish();
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
@@ -254,6 +256,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "No Internet Connection!", Toast.LENGTH_LONG).show();
         }
     }
+
 
 
 }

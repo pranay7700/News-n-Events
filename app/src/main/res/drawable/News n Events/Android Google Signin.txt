@@ -1,0 +1,219 @@
+//In activity_main.xml
+
+
+<Button
+                android:id="@+id/BTNgoogle"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@+id/TVForgot"
+                android:layout_alignLeft="@+id/cv"
+                android:layout_alignRight="@+id/cv"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="90dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/bg_uifb"
+                android:drawableLeft="@drawable/newgooglelogo1"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="LOGIN WITH GOOGLE"
+                android:textColor="@color/colorPurple" />
+
+
+
+
+
+
+
+//above MainActivity onCreate
+
+int RC_SIGN_IN = 0;
+    GoogleSignInClient mGoogleSignInClient;
+
+	
+//In MainActivity onCreate
+
+ // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        // Build a GoogleSignInClient with the options specified by gso.
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        google.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signIn();
+            }
+        });
+
+
+
+
+
+
+
+//Below MainActivity onCreate
+
+ private void signIn() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            // The Task returned from this call is always completed, no need to attach
+            // a listener.
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+
+
+
+        }
+    }
+
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            // Signed in successfully, show authenticated UI.
+            startActivity(new Intent(MainActivity.this, Dashboard.class));
+        } catch (ApiException e) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            Log.w("Google Sign In Error", "signInResult:failed code=" + e.getStatusCode());
+            Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null) {
+            startActivity(new Intent(MainActivity.this, Dashboard.class));
+        }
+        super.onStart();
+    }
+	
+	
+	
+//In MainActivity 
+
+
+
+ private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            Toast.makeText(MainActivity.this,"you are not able to log in to google",Toast.LENGTH_LONG).show();
+
+                        }
+
+                        // ...
+                    }
+                });
+    }
+
+	
+	
+//Dashboard onCreate above
+
+GoogleSignInClient mGoogleSignInClient;
+    private FirebaseDatabase firebaseDatabase;
+
+	
+	
+	
+
+//dashboard  onCreate
+
+google = (Button) findViewById(R.id.BTNgoogle);
+
+
+// Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+// Build a GoogleSignInClient with the options specified by gso.
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(Dashboard.this);
+        if (acct != null) {
+            String personName = acct.getDisplayName();
+            String personGivenName = acct.getGivenName();
+            String personFamilyName = acct.getFamilyName();
+            String personEmail = acct.getEmail();
+            String personId = acct.getId();
+
+            Uri personPhoto = acct.getPhotoUrl();
+
+            dashboardname.setText("Name :  " + personName);
+            dashboardemail.setText("Email : " + personEmail);
+            Glide.with(this).load(personPhoto).into(dashboardphoto);
+            
+
+        }
+
+		
+		
+//dashboard onCreate Below
+
+  private void signOut() {
+        mGoogleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(Dashboard.this, "Successfully signed out", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(Dashboard.this, MainActivity.class));
+                finish();
+            }
+        });
+
+
+    }
+
+	
+//in onOptionsItemSelected
+
+else if(id == R.id.action_logout){
+
+            signOut();
+			
+        }
+		
+		
+//In updateNavHeader in Dashboard
+
+
+
+		dashboardname.setText(currentUser.getDisplayName());
+        dashboardemail.setText(currentUser.getEmail());
+
+        Glide.with(this).load(currentUser.getPhotoUrl()).into(dashboardphoto);
+
+		
+		//BLOGGER
+		https://www.googleapis.com/blogger/v3/blogs/6758589450801578091
+
+		

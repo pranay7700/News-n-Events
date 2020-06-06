@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1033253745707",
+    "firebase_url": "https://newsnevents-897e0.firebaseio.com",
+    "project_id": "newsnevents-897e0",
+    "storage_bucket": "newsnevents-897e0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1033253745707:android:155ac94d3b3f904661266e",
+        "android_client_info": {
+          "package_name": "com.vaagdevi.newsnevents"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1033253745707-tskhhbl1rpq850cmtcrqe25b40budrhm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vaagdevi.newsnevents",
+            "certificate_hash": "ed653819288d37d0dd5ee3d2b867c1c4e13da012"
+          }
+        },
+        {
+          "client_id": "1033253745707-h8ugtl0hidp95lgosr3up7ctnvk6j2sr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEnS1PQ3omzthZX5iuIwc-MIGB375Shfo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1033253745707-qbkkbj64et2oalsicmugsd88nr2265a3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

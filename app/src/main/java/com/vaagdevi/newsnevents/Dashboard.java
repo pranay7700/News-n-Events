@@ -1,6 +1,9 @@
 package com.vaagdevi.newsnevents;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -16,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -37,6 +41,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.RemoteMessage;
 
 import static com.vaagdevi.newsnevents.R.id.action_logout;
 import static com.vaagdevi.newsnevents.R.id.action_settings;
@@ -264,7 +269,22 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
     }
 
+    public void onMessageReceived(RemoteMessage remoteMessage) {
+        showNotification(remoteMessage.getNotification().getBody());
+    }
 
+    public void showNotification(String message) {
+        PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, Notification.class), 0);
+        android.app.Notification notification = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.notification_image)
+                .setContentTitle("News n Events")
+                .setContentText(message)
+                .setContentIntent(pi)
+                .setAutoCancel(true)
+                .build();
 
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(0, notification);
+    }
 
 }

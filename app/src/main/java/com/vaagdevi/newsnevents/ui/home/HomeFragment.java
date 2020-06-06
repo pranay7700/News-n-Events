@@ -33,7 +33,7 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
 
-    ImageView HomeBackground,HomeClover,HomeEvents,HomeNews,HomeNotifications,HomeProfile,HomeGuestLectures,HomeWorkshops;
+    ImageView HomeBackground,HomeLogo,HomeClover,HomeEvents,HomeNews,HomeNotifications,HomeProfile,HomeGuestLectures,HomeWorkshops;
     LinearLayout HomeTextsplash, HomeExplore, HomeMenus;
     Animation FromBottom;
 
@@ -49,6 +49,7 @@ public class HomeFragment extends Fragment {
 
 
         HomeBackground = (ImageView) root.findViewById(R.id.home_background);
+        HomeLogo = (ImageView) root.findViewById(R.id.home_splashlogo);
         HomeClover = (ImageView) root.findViewById(R.id.home_clover);
         HomeEvents = (ImageView) root.findViewById(R.id.home_events);
         HomeNews = (ImageView) root.findViewById(R.id.home_news);
@@ -63,10 +64,13 @@ public class HomeFragment extends Fragment {
         HomeMenus = (LinearLayout) root.findViewById(R.id.home_menus);
 
 
-        HomeBackground.animate().translationY(-1900).setDuration(800).setStartDelay(500);
-        HomeClover.animate().alpha(0).setDuration(800).setStartDelay(600);
-        HomeTextsplash.animate().translationY(140).alpha(0).setDuration(800).setStartDelay(500);
+        //HomeBackground.animate().translationY(-1900).setDuration(800).setStartDelay(500);
+        //HomeLogo.animate().alpha(0).setDuration(800).setStartDelay(800);
+        HomeClover.animate().alpha(0).setDuration(800).setStartDelay(800);
+        HomeLogo.animate().translationY(140).alpha(0).setDuration(800).setStartDelay(800);
+        HomeTextsplash.animate().translationY(140).alpha(0).setDuration(800).setStartDelay(800);
 
+        HomeBackground.startAnimation(FromBottom);
         HomeExplore.startAnimation(FromBottom);
         HomeMenus.startAnimation(FromBottom);
 
@@ -83,8 +87,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                HomeExplore.setVisibility(View.INVISIBLE);
-
                 Events eventsFragment = new Events();
                 FragmentTransaction eventsFragmentTransaction = getFragmentManager().beginTransaction();
                 eventsFragmentTransaction.replace(R.id.home_fragment,eventsFragment);
@@ -98,8 +100,6 @@ public class HomeFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
-
-                HomeExplore.setVisibility(View.INVISIBLE);
 
                 News newsFragment =new News();
                 FragmentTransaction newsFragmentTransaction = getFragmentManager().beginTransaction();
