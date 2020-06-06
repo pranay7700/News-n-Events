@@ -32,10 +32,7 @@
                 android:id="@+id/profile_photo"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
-                android:layout_marginStart="127dp"
                 android:layout_marginTop="32dp"
                 android:padding="5dp"
                 android:scaleType="centerCrop"
@@ -50,16 +47,11 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginEnd="130dp"
-                android:layout_marginBottom="58dp"
+                android:layout_marginEnd="115dp"
+                android:layout_marginBottom="45dp"
                 android:elevation="5dp"
                 android:src="@drawable/ic_profile_photo"
-                app:layout_anchor="@id/setappBar"
-                app:layout_anchorGravity="left"
-                app:pressedTranslationZ="12dp"
-                tools:ignore="NotSibling"
-                tools:layout_editor_absoluteX="129dp"
-                tools:layout_editor_absoluteY="144dp" />
+                tools:ignore="NotSibling" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/profile_toolbar"

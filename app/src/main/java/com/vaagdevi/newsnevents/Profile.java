@@ -139,13 +139,114 @@ public class Profile extends AppCompatActivity {
             }
         });
 
-        if (findViewById(R.id.BTNlogin) != null) {
             loginprofiledata();
-        } else {
+
             googleprofiledata();
-        }
+
     }
 
+    public void loginprofiledata() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("ResourceType")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+                String Email = dataSnapshot.child("email").getValue().toString();
+                String Username = dataSnapshot.child("username").getValue().toString();
+                String MobileNumber = dataSnapshot.child("mobilenumber").getValue().toString();
+                String Password = dataSnapshot.child("password").getValue().toString();
+                String RollNo = dataSnapshot.child("rollno").getValue().toString();
+                String Branch = dataSnapshot.child("branch").getValue().toString();
+                String College = dataSnapshot.child("college").getValue().toString();
+                String Address = dataSnapshot.child("address").getValue().toString();
+                String ProfileImage = dataSnapshot.child("profileimage").getValue().toString();
+
+                profileemail.setText(Email);
+                profileusername.setText(Username);
+                profilemobilenumber.setText(MobileNumber);
+                profilepassword.setText(Password);
+                profilerollno.setText(RollNo);
+                profilebranch.setText(Branch);
+                profilecollege.setText(College);
+                profileaddress.setText(Address);
+
+                //Picasso.with(getApplicationContext()).load(ProfileImage).placeholder(R.drawable.profile_image3).into(profilephoto);
+                Glide.with(Profile.this).load(ProfileImage).placeholder(R.drawable.profile_image3).into(profilephoto);
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+
+    }
+
+    public void googleprofiledata() {
+
+        databaseref.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("ResourceType")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .build();
+
+                // Build a GoogleSignInClient with the options specified by gso.
+                mGoogleSignInClient = GoogleSignIn.getClient(Profile.this, gso);
+
+                GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(Profile.this);
+                if (acct != null) {
+                    String personName = acct.getDisplayName();
+                    String personGivenName = acct.getGivenName();
+                    String personFamilyName = acct.getFamilyName();
+                    String personEmail = acct.getEmail();
+                    String personId = acct.getId();
+
+                    Uri personPhoto = acct.getPhotoUrl();
+
+                    String GoogleEmail = dataSnapshot.child("email").getValue().toString();
+                    String GoogleUsername = dataSnapshot.child("username").getValue().toString();
+                    String GoogleMobileNumber = dataSnapshot.child("mobilenumber").getValue().toString();
+                    //String GooglePassword = dataSnapshot.child("password").getValue().toString();
+                    String GoogleRollNo = dataSnapshot.child("rollno").getValue().toString();
+                    String GoogleBranch = dataSnapshot.child("branch").getValue().toString();
+                    String GoogleCollege = dataSnapshot.child("college").getValue().toString();
+                    String GoogleAddress = dataSnapshot.child("address").getValue().toString();
+                    String GoogleProfileImage = dataSnapshot.child("profileimage").getValue().toString();
+
+
+                    profileemail.setText(personEmail);
+                    profileusername.setText(personName);
+                    profilemobilenumber.setText(GoogleMobileNumber);
+                    //profilepassword.setText(GooglePassword);
+                    profilerollno.setText(GoogleRollNo);
+                    profilebranch.setText(GoogleBranch);
+                    profilecollege.setText(GoogleCollege);
+                    profileaddress.setText(GoogleAddress);
+
+                    Glide.with(Profile.this).load(personPhoto).placeholder(R.drawable.profile_image3).into(profilephoto);
+
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+
+
+    }
 
     private void updateProfile() {
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -261,103 +362,5 @@ public class Profile extends AppCompatActivity {
         }
     }
 
-    public void loginprofiledata() {
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @SuppressLint("ResourceType")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-
-                String Email = dataSnapshot.child("email").getValue().toString();
-                String Username = dataSnapshot.child("username").getValue().toString();
-                String MobileNumber = dataSnapshot.child("mobilenumber").getValue().toString();
-                String Password = dataSnapshot.child("password").getValue().toString();
-                String RollNo = dataSnapshot.child("rollno").getValue().toString();
-                String Branch = dataSnapshot.child("branch").getValue().toString();
-                String College = dataSnapshot.child("college").getValue().toString();
-                String Address = dataSnapshot.child("address").getValue().toString();
-                String ProfileImage = dataSnapshot.child("profileimage").getValue().toString();
-
-                profileemail.setText(Email);
-                profileusername.setText(Username);
-                profilemobilenumber.setText(MobileNumber);
-                profilepassword.setText(Password);
-                profilerollno.setText(RollNo);
-                profilebranch.setText(Branch);
-                profilecollege.setText(College);
-                profileaddress.setText(Address);
-
-                //Picasso.with(getApplicationContext()).load(ProfileImage).placeholder(R.drawable.profile_image3).into(profilephoto);
-                Glide.with(Profile.this).load(ProfileImage).placeholder(R.drawable.profile_image3).into(profilephoto);
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-
-        });
-
-    }
-
-    public void googleprofiledata() {
-
-        databaseref.addValueEventListener(new ValueEventListener() {
-            @SuppressLint("ResourceType")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-
-                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestEmail()
-                        .build();
-
-                // Build a GoogleSignInClient with the options specified by gso.
-                mGoogleSignInClient = GoogleSignIn.getClient(Profile.this, gso);
-
-                GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(Profile.this);
-                if (acct != null) {
-                    String personName = acct.getDisplayName();
-                    String personGivenName = acct.getGivenName();
-                    String personFamilyName = acct.getFamilyName();
-                    String personEmail = acct.getEmail();
-                    String personId = acct.getId();
-
-                    Uri personPhoto = acct.getPhotoUrl();
-
-                    String GoogleMobileNumber = dataSnapshot.child("mobilenumber").getValue().toString();
-                    String GoogleRollNo = dataSnapshot.child("rollno").getValue().toString();
-                    String GoogleBranch = dataSnapshot.child("branch").getValue().toString();
-                    String GoogleCollege = dataSnapshot.child("college").getValue().toString();
-                    String GoogleAddress = dataSnapshot.child("address").getValue().toString();
-                    String GoogleProfileImage = dataSnapshot.child("profileimage").getValue().toString();
-
-
-                    profileemail.setText(personEmail);
-                    profileusername.setText(personName);
-                    profilemobilenumber.setText(GoogleMobileNumber);
-                    //profilepassword.setText(View.INVISIBLE);
-                    profilerollno.setText(GoogleRollNo);
-                    profilebranch.setText(GoogleBranch);
-                    profilecollege.setText(GoogleCollege);
-                    profileaddress.setText(GoogleAddress);
-
-                    Glide.with(Profile.this).load(personPhoto).placeholder(R.drawable.profile_image3).into(profilephoto);
-
-
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-
-        });
-
-
-    }
 }

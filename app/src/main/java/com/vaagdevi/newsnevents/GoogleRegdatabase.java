@@ -18,6 +18,6 @@ public class GoogleRegdatabase {
 
     }
 
-
-
+    public GoogleRegdatabase() {
+    }
 }

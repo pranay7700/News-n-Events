@@ -231,6 +231,34 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+
+                            final String email = "";
+                            final String username = "";
+                            final String mobilenumber = "";
+                            final String rollno = "";
+                            final String branch = "";
+                            final String college = "";
+                            final String address = "";
+                            final String profileimage = "";
+
+                            GoogleRegdatabase googleRegdatabase = new GoogleRegdatabase( email, username, mobilenumber, rollno, branch, college, address, profileimage);
+
+                            FirebaseDatabase.getInstance().getReference(databaseref.getKey()).child(mAuth.getCurrentUser().getUid())
+                                    .setValue(googleRegdatabase).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
+                                    Toast.makeText(MainActivity.this, "Logined Successfully", Toast.LENGTH_SHORT).show();
+
+                                    /*progressDialog.dismiss();
+                                    startActivity(new Intent(MainActivity.this, Dashboard.class));
+                                    Toast.makeText(MainActivity.this, "Logined Successfully", Toast.LENGTH_SHORT).show();
+                                    finish();*/
+
+
+                                }
+                            });
+
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
