@@ -109,8 +109,6 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
             }
         });
 
-
-
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,10 +117,8 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                 progressDialog.setMessage("Please wait...");
                 checkConnection();
 
-
                 String emailid = Emailid.getText().toString();
                 final String passid = Passid.getText().toString();
-
 
                 if (emailid.isEmpty() && passid.isEmpty()) {
                     Toast.makeText(MainActivity.this, "Fields Empty!", Toast.LENGTH_SHORT).show();
@@ -143,22 +139,21 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                                     if ((task.isSuccessful())) {
                                         // Sign in success, update UI with the signed-in user's information
                                         Toast.makeText(MainActivity.this, "Logined Successfully", Toast.LENGTH_SHORT).show();
+                                        FirebaseUser firebaseUser = mAuth.getCurrentUser();
                                         startActivity(new Intent(MainActivity.this, Dashboard.class));
                                         finish();
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         progressDialog.dismiss();
                                         Toast.makeText(MainActivity.this, "Unable to Login", Toast.LENGTH_SHORT).show();
-
                                     }
-
                                 }
                             });
-
                 } else {
                     progressDialog.dismiss();
                     Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
                 }
+
 
             }
 
@@ -205,6 +200,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 progressDialog.dismiss();
                 startActivity(new Intent(MainActivity.this, Dashboard.class));
+                Toast.makeText(MainActivity.this, "Logined Successfully", Toast.LENGTH_SHORT).show();
                 firebaseAuthWithGoogle(account);
                 finish();
             } catch (ApiException e) {
@@ -236,25 +232,23 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                             final String username = "";
                             final String mobilenumber = "";
                             final String rollno = "";
+                            final String year = "";
                             final String branch = "";
                             final String college = "";
                             final String address = "";
                             final String profileimage = "";
 
-                            GoogleRegdatabase googleRegdatabase = new GoogleRegdatabase( email, username, mobilenumber, rollno, branch, college, address, profileimage);
+                            GoogleRegdatabase googleRegdatabase = new GoogleRegdatabase( email, username, mobilenumber, rollno, year, branch, college, address, profileimage);
 
                             FirebaseDatabase.getInstance().getReference(databaseref.getKey()).child(mAuth.getCurrentUser().getUid())
                                     .setValue(googleRegdatabase).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
 
-                                    Toast.makeText(MainActivity.this, "Logined Successfully", Toast.LENGTH_SHORT).show();
-
                                     /*progressDialog.dismiss();
                                     startActivity(new Intent(MainActivity.this, Dashboard.class));
                                     Toast.makeText(MainActivity.this, "Logined Successfully", Toast.LENGTH_SHORT).show();
                                     finish();*/
-
 
                                 }
                             });
@@ -285,6 +279,17 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
 
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null) {
+            startActivity(new Intent(MainActivity.this, Dashboard.class));
+        }
+        super.onStart();
+    }
 
 }

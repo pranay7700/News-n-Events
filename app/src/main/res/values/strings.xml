@@ -16,6 +16,7 @@
     <string name="menu_events">Events</string>
     <string name="menu_news">News</string>
     <string name="menu_developers">Developers</string>
+    <string name="logout">Logout</string>
 
 
     <string-array name="year">

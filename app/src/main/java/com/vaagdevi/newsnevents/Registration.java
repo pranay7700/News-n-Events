@@ -89,6 +89,7 @@ public class Registration extends AppCompatActivity {
                 final String password = Password.getText().toString();
                 final String rollno = "";
                 final String branch = "";
+                final String year = "";
                 final String college = "";
                 final String address = "";
                 final String profileimage = "";
@@ -122,7 +123,7 @@ public class Registration extends AppCompatActivity {
 
                                     if ((task.isSuccessful())) {
                                         // Sign in success, update UI with the signed-in user's information
-                                        Regdatabase regdatabase = new Regdatabase( email, username, mobilenumber, password, rollno, branch, college, address, profileimage);
+                                        Regdatabase regdatabase = new Regdatabase( email, username, mobilenumber, password, rollno, year, branch, college, address, profileimage);
 
                                         FirebaseDatabase.getInstance().getReference(databaseref.getKey()).child(mAuth.getCurrentUser().getUid())
                                                 .setValue(regdatabase).addOnCompleteListener(new OnCompleteListener<Void>() {

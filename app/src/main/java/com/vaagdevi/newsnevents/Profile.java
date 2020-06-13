@@ -58,7 +58,7 @@ public class Profile extends AppCompatActivity {
 
     CircleImageView profilephoto;
     EditText profileusername, profileemail, profilepassword, profilemobilenumber, profilerollno, profilebranch, profilecollege, profileaddress;
-    String UsernameStr, EmailStr, PasswordStr, MobileNumberStr, RollNoStr, BranchStr, CollegeStr, AddressStr;
+    String UsernameStr, EmailStr, PasswordStr, MobileNumberStr, RollNoStr, YearStr, BranchStr, CollegeStr, AddressStr;
     Spinner profileyear;
     String currentId;
     FloatingActionButton profileeditinfo, profileeditimage;
@@ -83,8 +83,7 @@ public class Profile extends AppCompatActivity {
         profileeditimage = (FloatingActionButton) findViewById(R.id.profile_editimage);
         profileusername = (EditText) findViewById(R.id.profile_usernameET);
         profileemail = (EditText) findViewById(R.id.profile_emailET);
-        profilepassword
-                = (EditText) findViewById(R.id.profile_passwordET);
+        profilepassword = (EditText) findViewById(R.id.profile_passwordET);
         profilemobilenumber = (EditText) findViewById(R.id.profile_mobilenumberET);
         profilerollno = (EditText) findViewById(R.id.profile_rollnoET);
         profileyear = (Spinner) findViewById(R.id.profile_yearSPI);
@@ -122,11 +121,21 @@ public class Profile extends AppCompatActivity {
                 PasswordStr = profilepassword.getText().toString();
                 MobileNumberStr = profilemobilenumber.getText().toString();
                 RollNoStr = profilerollno.getText().toString();
+                YearStr = profileyear.getSelectedItem().toString();
                 BranchStr = profilebranch.getText().toString();
                 CollegeStr = profilecollege.getText().toString();
                 AddressStr = profileaddress.getText().toString();
 
-                updateProfile();
+                /*if (findViewById(R.id.BTNlogin) != null) {
+                    loginupdateProfile();
+                } else {
+                    googleupdateProfile();
+                }*/
+
+                //loginupdateProfile();
+
+                googleupdateProfile();
+
             }
         });
 
@@ -139,10 +148,15 @@ public class Profile extends AppCompatActivity {
             }
         });
 
+        /*if (findViewById(R.id.BTNlogin) != null) {
             loginprofiledata();
-
+        } else {
             googleprofiledata();
+        }*/
 
+        //loginprofiledata();
+
+        googleprofiledata();
     }
 
     public void loginprofiledata() {
@@ -167,6 +181,7 @@ public class Profile extends AppCompatActivity {
                 profilemobilenumber.setText(MobileNumber);
                 profilepassword.setText(Password);
                 profilerollno.setText(RollNo);
+                profileyear.setAdapter(arrayAdapter);
                 profilebranch.setText(Branch);
                 profilecollege.setText(College);
                 profileaddress.setText(Address);
@@ -184,6 +199,52 @@ public class Profile extends AppCompatActivity {
 
         });
 
+    }
+
+    private void loginupdateProfile() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    progressDialog.setTitle("Updating your profile");
+                    progressDialog.setMessage("Please wait...");
+                    progressDialog.show();
+
+                    HashMap<String, Object> postMap = new HashMap<>();
+                    postMap.put("username", UsernameStr);
+                    postMap.put("email", EmailStr);
+                    postMap.put("mobilenumber", MobileNumberStr);
+                    postMap.put("password", PasswordStr);
+                    postMap.put("rollno", RollNoStr);
+                    postMap.put("year", YearStr);
+                    postMap.put("branch", BranchStr);
+                    postMap.put("college", CollegeStr);
+                    postMap.put("address", AddressStr);
+
+                    databaseReference.updateChildren(postMap)
+                            .addOnCompleteListener(new OnCompleteListener() {
+                                @Override
+                                public void onComplete(@NonNull Task task) {
+                                    if (task.isSuccessful()) {
+                                        progressDialog.dismiss();
+                                        startActivity(new Intent(Profile.this, Profile.class));
+                                        overridePendingTransition(0, 0);
+                                        finish();
+                                        Toast.makeText(Profile.this, "Profile updated successfully!", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        progressDialog.dismiss();
+                                        Toast.makeText(Profile.this, "Error occurred! Try again", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void googleprofiledata() {
@@ -209,33 +270,33 @@ public class Profile extends AppCompatActivity {
                     String personEmail = acct.getEmail();
                     String personId = acct.getId();
 
-                    Uri personPhoto = acct.getPhotoUrl();
 
-                    String GoogleEmail = dataSnapshot.child("email").getValue().toString();
-                    String GoogleUsername = dataSnapshot.child("username").getValue().toString();
                     String GoogleMobileNumber = dataSnapshot.child("mobilenumber").getValue().toString();
-                    //String GooglePassword = dataSnapshot.child("password").getValue().toString();
                     String GoogleRollNo = dataSnapshot.child("rollno").getValue().toString();
                     String GoogleBranch = dataSnapshot.child("branch").getValue().toString();
                     String GoogleCollege = dataSnapshot.child("college").getValue().toString();
                     String GoogleAddress = dataSnapshot.child("address").getValue().toString();
-                    String GoogleProfileImage = dataSnapshot.child("profileimage").getValue().toString();
+                    //String GoogleProfileImage = dataSnapshot.child("profileimage").getValue().toString();
 
 
                     profileemail.setText(personEmail);
                     profileusername.setText(personName);
                     profilemobilenumber.setText(GoogleMobileNumber);
-                    //profilepassword.setText(GooglePassword);
                     profilerollno.setText(GoogleRollNo);
+                    profileyear.setAdapter(arrayAdapter);
                     profilebranch.setText(GoogleBranch);
                     profilecollege.setText(GoogleCollege);
                     profileaddress.setText(GoogleAddress);
+                    profilepassword.setVisibility(View.GONE);
+                    profileeditimage.setVisibility(View.GONE);
+
+
+                    final StorageReference googlefilePath = storageReference;
+                    final Uri personPhoto = acct.getPhotoUrl();
 
                     Glide.with(Profile.this).load(personPhoto).placeholder(R.drawable.profile_image3).into(profilephoto);
 
-
                 }
-
             }
 
             @Override
@@ -248,8 +309,8 @@ public class Profile extends AppCompatActivity {
 
     }
 
-    private void updateProfile() {
-        databaseReference.addValueEventListener(new ValueEventListener() {
+    private void googleupdateProfile() {
+        databaseref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -261,13 +322,13 @@ public class Profile extends AppCompatActivity {
                     postMap.put("username", UsernameStr);
                     postMap.put("email", EmailStr);
                     postMap.put("mobilenumber", MobileNumberStr);
-                    postMap.put("password", PasswordStr);
                     postMap.put("rollno", RollNoStr);
+                    postMap.put("year", YearStr);
                     postMap.put("branch", BranchStr);
                     postMap.put("college", CollegeStr);
                     postMap.put("address", AddressStr);
 
-                    databaseReference.updateChildren(postMap)
+                    databaseref.updateChildren(postMap)
                             .addOnCompleteListener(new OnCompleteListener() {
                                 @Override
                                 public void onComplete(@NonNull Task task) {

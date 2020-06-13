@@ -44,7 +44,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.RemoteMessage;
 
 import static com.vaagdevi.newsnevents.R.id.action_logout;
-import static com.vaagdevi.newsnevents.R.id.action_settings;
 import static com.vaagdevi.newsnevents.R.id.drawer_layout;
 import static com.vaagdevi.newsnevents.R.id.emailTV;
 import static com.vaagdevi.newsnevents.R.id.nameTV;
@@ -140,11 +139,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
         int id = item.getItemId();
 
-        if (id == action_settings) {
-            startActivity(new Intent(Dashboard.this, Settings.class));
-            return true;
-
-        } else if (id == action_logout) {
+        if (id == action_logout) {
 
             signOut();
             finish();
@@ -286,5 +281,6 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(0, notification);
     }
+
 
 }
