@@ -51,9 +51,9 @@ public class GuestLecturesMyAdapter extends RecyclerView.Adapter<GuestLecturesMy
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
+
         TextView name, email,date,time,description;
         ImageView profilePic;
-
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -65,7 +65,5 @@ public class GuestLecturesMyAdapter extends RecyclerView.Adapter<GuestLecturesMy
             description = (TextView) itemView.findViewById(R.id.guestlecture_descTV);
 
         }
-
     }
-
 }

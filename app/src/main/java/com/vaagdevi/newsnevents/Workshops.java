@@ -47,8 +47,8 @@ public class Workshops extends AppCompatActivity {
 
                 for(DataSnapshot dataSnapshot1: dataSnapshot.getChildren())
                 {
-                    WorkshopsRegdatabase p = dataSnapshot1.getValue(WorkshopsRegdatabase.class);
-                    list.add(p);
+                    WorkshopsRegdatabase workshopsRegdatabase = dataSnapshot1.getValue(WorkshopsRegdatabase.class);
+                    list.add(workshopsRegdatabase);
                 }
                 adapter = new WorkshopsMyAdapter(Workshops.this,list);
                 recyclerView.setAdapter(adapter);
