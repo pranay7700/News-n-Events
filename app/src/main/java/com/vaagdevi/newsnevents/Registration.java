@@ -59,7 +59,7 @@ public class Registration extends AppCompatActivity {
         final FirebaseAuth mAuth;
         mAuth = FirebaseAuth.getInstance();
         progressDialog = new ProgressDialog(Registration.this);
-        databaseref = FirebaseDatabase.getInstance().getReference("News n Events Users");
+        databaseref = FirebaseDatabase.getInstance().getReference("Login Users");
 
 
         @SuppressLint("WrongViewCast") final AppCompatCheckBox checkBox = (AppCompatCheckBox) findViewById(R.id.show_hide_password);

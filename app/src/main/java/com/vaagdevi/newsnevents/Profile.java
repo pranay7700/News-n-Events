@@ -73,7 +73,7 @@ public class Profile extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         currentId = firebaseAuth.getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("News n Events Users").child(currentId);
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Login Users").child(currentId);
         databaseref = FirebaseDatabase.getInstance().getReference().child("Google Users").child(currentId);
         progressDialog = new ProgressDialog(this);
         storageReference = FirebaseStorage.getInstance().getReference("Profile Images").child(currentId + ".jpg");
@@ -126,15 +126,15 @@ public class Profile extends AppCompatActivity {
                 CollegeStr = profilecollege.getText().toString();
                 AddressStr = profileaddress.getText().toString();
 
-                /*if (findViewById(R.id.BTNlogin) != null) {
+                if (findViewById(R.id.BTNlogin) != null) {
                     loginupdateProfile();
                 } else {
                     googleupdateProfile();
-                }*/
+                }
 
                 //loginupdateProfile();
 
-                googleupdateProfile();
+                //googleupdateProfile();
 
             }
         });
@@ -148,15 +148,15 @@ public class Profile extends AppCompatActivity {
             }
         });
 
-        /*if (findViewById(R.id.BTNlogin) != null) {
+        if (findViewById(R.id.BTNlogin) != null) {
             loginprofiledata();
         } else {
             googleprofiledata();
-        }*/
+        }
 
         //loginprofiledata();
 
-        googleprofiledata();
+        //googleprofiledata();
     }
 
     public void loginprofiledata() {

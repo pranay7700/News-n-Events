@@ -33,7 +33,7 @@
                     android:layout_height="75dp"
                     android:layout_alignParentTop="true"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="25dp"
+                    android:layout_marginLeft="23dp"
                     android:layout_marginTop="39dp"
                     android:padding="4dp"
                     app:civ_border_color="@android:color/black"
@@ -58,7 +58,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="22dp"
                     android:layout_marginEnd="0dp"
                     android:textColor="#000"
                     android:textSize="17dp"
@@ -71,11 +71,11 @@
                     android:layout_below="@+id/guestlecture_nameTV"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginTop="75dp"
+                    android:layout_marginTop="55dp"
                     android:layout_marginEnd="4dp"
                     android:textAlignment="gravity"
                     android:textColor="#000"
-                    android:textSize="13dp" />
+                    android:textSize="12dp" />
 
                 <TextView
                     android:id="@+id/notifications_dateTV"
@@ -84,10 +84,10 @@
                     android:layout_below="@+id/guestlecture_emailTV"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginTop="108dp"
+                    android:layout_marginTop="110dp"
                     android:layout_marginEnd="34dp"
                     android:textColor="#000"
-                    android:textSize="15dp" />
+                    android:textSize="14dp" />
 
 
             </RelativeLayout>

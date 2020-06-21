@@ -48,7 +48,7 @@
                 android:layout_marginRight="13dp"
                 android:text="Udayagiri Pranay"
                 android:textColor="#000"
-                android:textSize="25dp"
+                android:textSize="20dp"
                 android:textStyle="bold" />
 
             <ImageView
@@ -60,7 +60,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="105dp"
-                android:layout_marginEnd="160dp"
+                android:layout_marginEnd="135dp"
                 android:layout_marginRight="-60dp"
                 android:autoLink="all"
                 android:clickable="true"
@@ -75,7 +75,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="105dp"
-                android:layout_marginEnd="90dp"
+                android:layout_marginEnd="75dp"
                 android:layout_marginRight="-70dp"
                 android:autoLink="all"
                 android:clickable="true"
@@ -90,7 +90,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="105dp"
-                android:layout_marginEnd="30dp"
+                android:layout_marginEnd="25dp"
                 android:layout_marginRight="-57dp"
                 android:autoLink="all"
                 android:clickable="true"

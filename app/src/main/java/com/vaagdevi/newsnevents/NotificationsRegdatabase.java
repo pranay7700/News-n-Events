@@ -4,6 +4,8 @@ public class NotificationsRegdatabase {
 
     public String image, title, description, date;
 
+    public NotificationsRegdatabase() {
+    }
 
     public NotificationsRegdatabase(String image, String title, String description, String date) {
         this.image = image;
