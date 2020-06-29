@@ -91,8 +91,6 @@ public class HomeFragment extends Fragment {
                 FragmentTransaction eventsFragmentTransaction = getFragmentManager().beginTransaction();
                 eventsFragmentTransaction.replace(R.id.home_fragment,eventsFragment);
                 eventsFragmentTransaction.commit();
-
-
             }
         });
 

@@ -50,7 +50,7 @@ import static com.vaagdevi.newsnevents.R.id.photoIV;
 public class Dashboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "Dashboard";
-    private FirebaseAuth firebaseAuth, mAuth;
+    private FirebaseAuth firebaseAuth;
     GoogleSignInClient mGoogleSignInClient;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
@@ -73,8 +73,6 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         setContentView(R.layout.activity_dashboard);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        currentId = firebaseAuth.getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Login Users").child(currentId);
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -168,6 +166,8 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
     public void updateLoginNavHeader() {
 
+        currentId = firebaseAuth.getCurrentUser().getUid();
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Login Users").child(currentId);
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -247,6 +247,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
         if (backPressedTime + 2000 > System.currentTimeMillis()) {
             backToast.cancel();
+            finish();
             super.onBackPressed();
             return;
         } else {

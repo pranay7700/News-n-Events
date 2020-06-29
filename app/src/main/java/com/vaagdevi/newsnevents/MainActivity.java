@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -47,7 +48,6 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
     private ProgressDialog progressDialog;
     private DatabaseReference databaseref;
-
 
 
     EditText Emailid;
@@ -228,68 +228,86 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                            final String email = "";
-                            final String username = "";
-                            final String mobilenumber = "";
-                            final String rollno = "";
-                            final String year = "";
-                            final String branch = "";
-                            final String college = "";
-                            final String address = "";
-                            final String profileimage = "";
+                            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                    .requestEmail()
+                                    .build();
 
-                            GoogleRegdatabase googleRegdatabase = new GoogleRegdatabase( email, username, mobilenumber, rollno, year, branch, college, address, profileimage);
+                            // Build a GoogleSignInClient with the options specified by gso.
+                            mGoogleSignInClient = GoogleSignIn.getClient(MainActivity.this, gso);
 
-                            FirebaseDatabase.getInstance().getReference(databaseref.getKey()).child(mAuth.getCurrentUser().getUid())
-                                    .setValue(googleRegdatabase).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
+                            GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
+                            if (acct != null) {
+                                String personName = acct.getDisplayName();
+                                String personGivenName = acct.getGivenName();
+                                String personFamilyName = acct.getFamilyName();
+                                String personEmail = acct.getEmail();
+                                String personId = acct.getId();
+
+                                Uri personPhoto = acct.getPhotoUrl();
+
+
+                                final String email = personEmail;
+                                final String username = personName;
+                                final String mobilenumber = "";
+                                final String rollno = "";
+                                final String year = "";
+                                final String branch = "";
+                                final String college = "";
+                                final String address = "";
+                                final String profileimage = "";
+
+                                GoogleRegdatabase googleRegdatabase = new GoogleRegdatabase(email, username, mobilenumber, rollno, year, branch, college, address, profileimage);
+
+                                FirebaseDatabase.getInstance().getReference(databaseref.getKey()).child(mAuth.getCurrentUser().getUid())
+                                        .setValue(googleRegdatabase).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
 
                                     /*progressDialog.dismiss();
                                     startActivity(new Intent(MainActivity.this, Dashboard.class));
                                     Toast.makeText(MainActivity.this, "Logined Successfully", Toast.LENGTH_SHORT).show();
                                     finish();*/
 
-                                }
-                            });
+                                    }
+                                });
+                            }
+                                //updateUI(user);
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "signInWithCredential:failure", task.getException());
+                                Toast.makeText(MainActivity.this, "you are not able to log in to google", Toast.LENGTH_LONG).show();
+                                //updateUI(null);
+                            }
 
-                            //updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(MainActivity.this,"you are not able to log in to google",Toast.LENGTH_LONG).show();
-                            //updateUI(null);
+                            // ...
                         }
-
-                        // ...
-                    }
-                });
-    }
+                    });
+                }
 
 
-    public void checkConnection() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(
-                Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        public void checkConnection () {
+            ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(
+                    Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
 
-        if (null == activeNetwork) {
+            if (null == activeNetwork) {
 
-            progressDialog.dismiss();
-            Toast.makeText(MainActivity.this, "No Internet Connection!", Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
+                Toast.makeText(MainActivity.this, "No Internet Connection!", Toast.LENGTH_LONG).show();
+            }
         }
-    }
 
-    @Override
-    protected void onStart() {
+        @Override
+        protected void onStart () {
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        // Check for existing Google Sign In account, if the user is already signed in
-        // the GoogleSignInAccount will be non-null.
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if (account != null) {
-            startActivity(new Intent(MainActivity.this, Dashboard.class));
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            // Check for existing Google Sign In account, if the user is already signed in
+            // the GoogleSignInAccount will be non-null.
+            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+            if (account != null) {
+                startActivity(new Intent(MainActivity.this, Dashboard.class));
+            }
+            super.onStart();
         }
-        super.onStart();
-    }
 
-}
+    }
