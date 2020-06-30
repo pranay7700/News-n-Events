@@ -5,11 +5,18 @@
     android:layout_height="match_parent"
     tools:context=".Events.Events">
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_events"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
         <WebView
-            android:id="@+id/webview_events_fragment"
+            android:id="@+id/webview_events"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
 </FrameLayout>

@@ -16,17 +16,29 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".NewsActivity"
+            android:label="News"
+            android:parentActivityName=".Dashboard" />
+        <activity
+            android:name=".EventsActivity"
+            android:label="Events"
+            android:parentActivityName=".Dashboard"/>
+        <activity
             android:name=".Workshops"
-            android:label="Workshops" />
+            android:label="Workshops"
+            android:parentActivityName=".Dashboard" />
         <activity
             android:name=".GuestLectures"
-            android:label="Guest Lectures" />
+            android:label="Guest Lectures"
+            android:parentActivityName=".Dashboard" />
         <activity
             android:name=".Profile"
-            android:label="Profile" />
+            android:label="Profile"
+            android:parentActivityName=".Dashboard" />
         <activity
             android:name=".Notifications"
-            android:label="Notifications" />
+            android:label="Notifications"
+            android:parentActivityName=".Dashboard" />
         <activity
             android:name=".Dashboard"
             android:label="Dashboard"
@@ -49,7 +61,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
 
         <service
             android:name=".MyFirebaseMessagingService"

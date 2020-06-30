@@ -1,10 +1,14 @@
 package com.vaagdevi.newsnevents;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +25,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -63,6 +68,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
     private long backPressedTime;
     private Toast backToast;
+    SwipeRefreshLayout refreshLayout;
 
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -78,6 +84,32 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        refreshLayout = findViewById(R.id.refresh_home);
+
+        refreshLayout.setRefreshing(true);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(false);
+            }
+        }, 1500);
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                checkConnection();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        startActivity(new Intent(getApplicationContext(), Dashboard.class));
+                        overridePendingTransition(0, 0);
+                        finish();
+                    }
+                }, 1500);
+            }
+        });
+
         FloatingActionButton fab = findViewById(R.id.faqs);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +123,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             }
         });
 
+
         DrawerLayout drawer = findViewById(drawer_layout);
         NavigationView navigationView = findViewById(nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -100,6 +133,8 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         NavController navController = Navigation.findNavController(this, nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+
 
         if (findViewById(R.id.BTNlogin) != null) {
             updateLoginNavHeader();
@@ -114,7 +149,6 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu, menu);
-
 
         return true;
     }
@@ -259,8 +293,14 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         finish();
 
     }
+    public void checkConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(
+                Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
 
-
-
-
+        if (null == activeNetwork) {
+            Toast.makeText(Dashboard.this, "No Internet Connection!",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
 }

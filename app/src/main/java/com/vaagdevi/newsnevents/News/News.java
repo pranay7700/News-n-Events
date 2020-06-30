@@ -31,7 +31,7 @@ public class News extends Fragment {
         View view=inflater.inflate(R.layout.news_fragment, container, false);
 
         Toast.makeText(getActivity(),"Loading News",Toast.LENGTH_LONG).show();
-        WebView newsview =(WebView) view.findViewById(R.id.webviewnews);
+        WebView newsview =(WebView) view.findViewById(R.id.webview_news_fragment);
         newsview.getSettings().setJavaScriptEnabled(true);
         newsview.setWebViewClient(new WebViewClient());
         newsview.loadUrl("https://vaagdevinewsnevents.blogspot.com/2020/03/news-n-events.html");

@@ -17,13 +17,12 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.vaagdevi.newsnevents.Events.Events;
+import com.vaagdevi.newsnevents.EventsActivity;
 import com.vaagdevi.newsnevents.GuestLectures;
-import com.vaagdevi.newsnevents.News.News;
+import com.vaagdevi.newsnevents.NewsActivity;
 import com.vaagdevi.newsnevents.Notifications;
 import com.vaagdevi.newsnevents.Profile;
 import com.vaagdevi.newsnevents.R;
@@ -87,10 +86,14 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Events eventsFragment = new Events();
+
+                /*Events eventsFragment = new Events();
                 FragmentTransaction eventsFragmentTransaction = getFragmentManager().beginTransaction();
                 eventsFragmentTransaction.replace(R.id.home_fragment,eventsFragment);
-                eventsFragmentTransaction.commit();
+                eventsFragmentTransaction.commit();*/
+
+                startActivity(new Intent(getActivity(), EventsActivity.class));
+
             }
         });
 
@@ -99,10 +102,12 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                News newsFragment =new News();
+                /*News newsFragment =new News();
                 FragmentTransaction newsFragmentTransaction = getFragmentManager().beginTransaction();
                 newsFragmentTransaction.replace(R.id.home_fragment,newsFragment);
-                newsFragmentTransaction.commit();
+                newsFragmentTransaction.commit();*/
+
+                startActivity(new Intent(getActivity(), NewsActivity.class));
 
             }
         });

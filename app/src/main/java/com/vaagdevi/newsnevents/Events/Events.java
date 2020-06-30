@@ -17,8 +17,6 @@ import com.vaagdevi.newsnevents.R;
 
 public class Events extends Fragment {
 
-
-
     private EventsViewModel mViewModel;
 
     public static Events newInstance() {
@@ -29,9 +27,10 @@ public class Events extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.events_fragment, container, false);
+        
 
         Toast.makeText(getActivity(),"Loading Events",Toast.LENGTH_SHORT).show();
-        WebView eventsview =(WebView) view.findViewById(R.id.webviewevents);
+        WebView eventsview =(WebView) view.findViewById(R.id.webview_events_fragment);
         eventsview.getSettings().setJavaScriptEnabled(true);
         eventsview.setWebViewClient(new WebViewClient());
         eventsview.loadUrl("https://vaagdevinewsnevents.blogspot.com/2020/05/events.html");
