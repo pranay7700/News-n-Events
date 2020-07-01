@@ -18,7 +18,8 @@
         <activity
             android:name=".NewsActivity"
             android:label="News"
-            android:parentActivityName=".Dashboard" />
+            android:parentActivityName=".Dashboard" >
+        </activity>
         <activity
             android:name=".EventsActivity"
             android:label="Events"

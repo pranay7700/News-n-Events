@@ -126,10 +126,11 @@ public class Profile extends AppCompatActivity {
                 CollegeStr = profilecollege.getText().toString();
                 AddressStr = profileaddress.getText().toString();
 
-                if (findViewById(R.id.BTNlogin) != null) {
-                    loginupdateProfile();
-                } else {
+
+                if (GoogleSignInOptions.DEFAULT_SIGN_IN != null) {
                     googleupdateProfile();
+                } else {
+                    loginupdateProfile();
                 }
 
                 //loginupdateProfile();
@@ -147,16 +148,16 @@ public class Profile extends AppCompatActivity {
                 startActivityForResult(i, GalleryPick);
             }
         });
-
-        if (findViewById(R.id.BTNlogin) != null) {
-            loginprofiledata();
-        } else {
+        if (GoogleSignInOptions.DEFAULT_SIGN_IN != null) {
             googleprofiledata();
+        } else {
+            loginprofiledata();
         }
 
         //loginprofiledata();
 
         //googleprofiledata();
+
     }
 
     public void loginprofiledata() {

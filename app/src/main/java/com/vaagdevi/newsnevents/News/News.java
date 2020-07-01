@@ -20,9 +20,7 @@ public class News extends Fragment {
     private NewsViewModel mViewModel;
 
     public static News newInstance() {
-
         return new News();
-
     }
 
     @Override
@@ -30,11 +28,11 @@ public class News extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.news_fragment, container, false);
 
-        Toast.makeText(getActivity(),"Loading News",Toast.LENGTH_LONG).show();
-        WebView newsview =(WebView) view.findViewById(R.id.webview_news_fragment);
-        newsview.getSettings().setJavaScriptEnabled(true);
-        newsview.setWebViewClient(new WebViewClient());
-        newsview.loadUrl("https://vaagdevinewsnevents.blogspot.com/2020/03/news-n-events.html");
+        Toast.makeText(getActivity(),"Loading News",Toast.LENGTH_SHORT).show();
+        WebView news_fragment_view =(WebView) view.findViewById(R.id.webview_news_fragment);
+        news_fragment_view.getSettings().setJavaScriptEnabled(true);
+        news_fragment_view.setWebViewClient(new WebViewClient());
+        news_fragment_view.loadUrl("https://vaagdevinewsnevents.blogspot.com/2020/03/news-n-events.html");
 
         return view;
 

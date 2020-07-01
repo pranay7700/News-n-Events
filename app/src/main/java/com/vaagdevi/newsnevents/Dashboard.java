@@ -135,12 +135,15 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         NavigationUI.setupWithNavController(navigationView, navController);
 
 
-
-        if (findViewById(R.id.BTNlogin) != null) {
-            updateLoginNavHeader();
-        } else {
+        if (GoogleSignInOptions.DEFAULT_SIGN_IN != null) {
             updateGoogleNavheader();
+        } else {
+            updateLoginNavHeader();
         }
+
+        //updateGoogleNavheader();
+
+        //updateLoginNavHeader();
 
     }
 
@@ -302,5 +305,10 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             Toast.makeText(Dashboard.this, "No Internet Connection!",
                     Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    protected void onStart () {
+        super.onStart();
     }
 }

@@ -30,10 +30,10 @@ public class Events extends Fragment {
         
 
         Toast.makeText(getActivity(),"Loading Events",Toast.LENGTH_SHORT).show();
-        WebView eventsview =(WebView) view.findViewById(R.id.webview_events_fragment);
-        eventsview.getSettings().setJavaScriptEnabled(true);
-        eventsview.setWebViewClient(new WebViewClient());
-        eventsview.loadUrl("https://vaagdevinewsnevents.blogspot.com/2020/05/events.html");
+        WebView events_fragment_view =(WebView) view.findViewById(R.id.webview_events_fragment);
+        events_fragment_view.getSettings().setJavaScriptEnabled(true);
+        events_fragment_view.setWebViewClient(new WebViewClient());
+        events_fragment_view.loadUrl("https://vaagdevinewsnevents.blogspot.com/2020/05/events.html");
 
         return view;
 
