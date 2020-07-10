@@ -31,7 +31,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="35dp"
-                android:src="@drawable/developer_photo3"
+                android:src="@drawable/developer_photo2"
                 android:padding="5dp"
                 app:civ_border_color="@android:color/black"
                 app:civ_border_width="2dp"

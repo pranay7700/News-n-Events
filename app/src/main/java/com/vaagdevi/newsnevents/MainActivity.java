@@ -43,6 +43,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private FirebaseAuth mAuth;
+    String currentId;
 
     int RC_SIGN_IN = 0;
     GoogleSignInClient mGoogleSignInClient;
@@ -72,7 +73,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         forgotpassid = (TextView) findViewById(R.id.TVForgot);
 
         mAuth = FirebaseAuth.getInstance();
-        databaseref = FirebaseDatabase.getInstance().getReference("Google Users");
+        databaseref = FirebaseDatabase.getInstance().getReference("Login Users");
         progressDialog = new ProgressDialog(MainActivity.this);
 
 
@@ -130,12 +131,13 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                     Passid.requestFocus();
                 } else if (!(emailid.isEmpty() && passid.isEmpty())) {
 
-                    progressDialog.show();
+
 
                     mAuth.signInWithEmailAndPassword(emailid, passid)
                             .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
+                                    progressDialog.show();
                                     if ((task.isSuccessful())) {
                                         // Sign in success, update UI with the signed-in user's information
                                         Toast.makeText(MainActivity.this, "Logined Successfully", Toast.LENGTH_SHORT).show();
@@ -153,8 +155,6 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                     progressDialog.dismiss();
                     Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
                 }
-
-
             }
 
 
@@ -249,6 +249,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                                 final String email = personEmail;
                                 final String username = personName;
                                 final String mobilenumber = "";
+                                final String password = "";
                                 final String rollno = "";
                                 final String year = "";
                                 final String branch = "";
@@ -256,10 +257,10 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                                 final String address = "";
                                 final String profileimage = "";
 
-                                GoogleRegdatabase googleRegdatabase = new GoogleRegdatabase(email, username, mobilenumber, rollno, year, branch, college, address, profileimage);
+                                Regdatabase regdatabase = new Regdatabase(email, username, mobilenumber, password, rollno, year, branch, college, address, profileimage);
 
                                 FirebaseDatabase.getInstance().getReference(databaseref.getKey()).child(mAuth.getCurrentUser().getUid())
-                                        .setValue(googleRegdatabase).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        .setValue(regdatabase).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
 

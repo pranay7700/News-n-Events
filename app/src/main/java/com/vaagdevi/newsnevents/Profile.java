@@ -49,7 +49,7 @@ public class Profile extends AppCompatActivity {
     private static final int PIC_CROP = 0;
     GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference databaseReference, databaseref;
+    private DatabaseReference databaseReference;
 
     private ProgressDialog progressDialog;
     private StorageReference storageReference;
@@ -74,7 +74,6 @@ public class Profile extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         currentId = firebaseAuth.getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Login Users").child(currentId);
-        databaseref = FirebaseDatabase.getInstance().getReference().child("Google Users").child(currentId);
         progressDialog = new ProgressDialog(this);
         storageReference = FirebaseStorage.getInstance().getReference("Profile Images").child(currentId + ".jpg");
 
@@ -129,7 +128,7 @@ public class Profile extends AppCompatActivity {
 
                 if (GoogleSignInOptions.DEFAULT_SIGN_IN != null) {
                     googleupdateProfile();
-                } else {
+                } else if(GoogleSignInOptions.DEFAULT_SIGN_IN == null) {
                     loginupdateProfile();
                 }
 
@@ -150,7 +149,7 @@ public class Profile extends AppCompatActivity {
         });
         if (GoogleSignInOptions.DEFAULT_SIGN_IN != null) {
             googleprofiledata();
-        } else {
+        } else if(GoogleSignInOptions.DEFAULT_SIGN_IN == null){
             loginprofiledata();
         }
 
@@ -161,6 +160,8 @@ public class Profile extends AppCompatActivity {
     }
 
     public void loginprofiledata() {
+        currentId = firebaseAuth.getCurrentUser().getUid();
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Login Users").child(currentId);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @SuppressLint("ResourceType")
             @Override
@@ -250,7 +251,10 @@ public class Profile extends AppCompatActivity {
 
     public void googleprofiledata() {
 
-        databaseref.addValueEventListener(new ValueEventListener() {
+        currentId = firebaseAuth.getCurrentUser().getUid();
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Login Users").child(currentId);
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @SuppressLint("ResourceType")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -311,7 +315,7 @@ public class Profile extends AppCompatActivity {
     }
 
     private void googleupdateProfile() {
-        databaseref.addValueEventListener(new ValueEventListener() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -329,7 +333,7 @@ public class Profile extends AppCompatActivity {
                     postMap.put("college", CollegeStr);
                     postMap.put("address", AddressStr);
 
-                    databaseref.updateChildren(postMap)
+                    databaseReference.updateChildren(postMap)
                             .addOnCompleteListener(new OnCompleteListener() {
                                 @Override
                                 public void onComplete(@NonNull Task task) {
