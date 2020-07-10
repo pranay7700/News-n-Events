@@ -128,7 +128,7 @@ public class Profile extends AppCompatActivity {
 
                 if (GoogleSignInOptions.DEFAULT_SIGN_IN != null) {
                     googleupdateProfile();
-                } else if(GoogleSignInOptions.DEFAULT_SIGN_IN == null) {
+                } else if (GoogleSignInOptions.DEFAULT_SIGN_IN == null) {
                     loginupdateProfile();
                 }
 
@@ -145,17 +145,19 @@ public class Profile extends AppCompatActivity {
                 Intent i = new Intent(Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i, GalleryPick);
+
+                if (GoogleSignInOptions.DEFAULT_SIGN_IN != null) {
+                    googleprofiledata();
+                } else if (GoogleSignInOptions.DEFAULT_SIGN_IN == null) {
+                    loginprofiledata();
+                }
+
+                //loginprofiledata();
+
+                //googleprofiledata();
             }
         });
-        if (GoogleSignInOptions.DEFAULT_SIGN_IN != null) {
-            googleprofiledata();
-        } else if(GoogleSignInOptions.DEFAULT_SIGN_IN == null){
-            loginprofiledata();
-        }
 
-        //loginprofiledata();
-
-        //googleprofiledata();
 
     }
 
