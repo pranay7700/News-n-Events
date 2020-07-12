@@ -23,6 +23,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatCheckBox;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -59,6 +64,9 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
     ImageButton register;
     TextView forgotpassid;
 
+    private AdView mAdView;
+    private InterstitialAd mInterstitialAd;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +84,20 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         databaseref = FirebaseDatabase.getInstance().getReference("Login Users");
         progressDialog = new ProgressDialog(MainActivity.this);
 
+        // Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
+        MobileAds.initialize(this, "ca-app-pub-2546283744340576~1317058396");
+
+        /*MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });*/
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        prepareAD();
 
         @SuppressLint("WrongViewCast") final AppCompatCheckBox checkBox = (AppCompatCheckBox) findViewById(R.id.show_hide_password);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -118,6 +140,8 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                 progressDialog.setMessage("Please wait...");
                 checkConnection();
 
+                progressDialog.show();
+
                 String emailid = Emailid.getText().toString();
                 final String passid = Passid.getText().toString();
 
@@ -132,18 +156,17 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                 } else if (!(emailid.isEmpty() && passid.isEmpty())) {
 
 
-
                     mAuth.signInWithEmailAndPassword(emailid, passid)
                             .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
-                                    progressDialog.show();
+
                                     if ((task.isSuccessful())) {
                                         // Sign in success, update UI with the signed-in user's information
                                         Toast.makeText(MainActivity.this, "Logined Successfully", Toast.LENGTH_SHORT).show();
                                         FirebaseUser firebaseUser = mAuth.getCurrentUser();
                                         startActivity(new Intent(MainActivity.this, Dashboard.class));
-                                        finish();
+
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         progressDialog.dismiss();
@@ -272,43 +295,67 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                                     }
                                 });
                             }
-                                //updateUI(user);
-                            } else {
-                                // If sign in fails, display a message to the user.
-                                Log.w(TAG, "signInWithCredential:failure", task.getException());
-                                Toast.makeText(MainActivity.this, "you are not able to log in to google", Toast.LENGTH_LONG).show();
-                                //updateUI(null);
-                            }
-
-                            // ...
+                            //updateUI(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            Toast.makeText(MainActivity.this, "you are not able to log in to google", Toast.LENGTH_LONG).show();
+                            //updateUI(null);
                         }
-                    });
-                }
 
-
-        public void checkConnection () {
-            ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(
-                    Context.CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-
-            if (null == activeNetwork) {
-
-                progressDialog.dismiss();
-                Toast.makeText(MainActivity.this, "No Internet Connection!", Toast.LENGTH_LONG).show();
-            }
-        }
-
-        @Override
-        protected void onStart () {
-
-            FirebaseUser currentUser = mAuth.getCurrentUser();
-            // Check for existing Google Sign In account, if the user is already signed in
-            // the GoogleSignInAccount will be non-null.
-            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-            if (account != null) {
-                startActivity(new Intent(MainActivity.this, Dashboard.class));
-            }
-            super.onStart();
-        }
-
+                        // ...
+                    }
+                });
     }
+
+
+    public void checkConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(
+                Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+
+        if (null == activeNetwork) {
+
+            progressDialog.dismiss();
+            Toast.makeText(MainActivity.this, "No Internet Connection!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null) {
+            startActivity(new Intent(MainActivity.this, Dashboard.class));
+            finish();
+        }
+        super.onStart();
+    }
+    public void prepareAD(){
+        mInterstitialAd = new InterstitialAd(this);
+        //Test AD Unit : ca-app-pub-3940256099942544/1033173712
+        mInterstitialAd.setAdUnitId("ca-app-pub-2546283744340576/2313078313");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (mInterstitialAd.isLoaded()){
+            mInterstitialAd.show();
+
+            mInterstitialAd.setAdListener(new AdListener(){
+                @Override
+                public void onAdClosed() {
+                    super.onAdClosed();
+                    finish();
+                }
+            });
+        }else {
+            super.onBackPressed();
+        }
+    }
+}

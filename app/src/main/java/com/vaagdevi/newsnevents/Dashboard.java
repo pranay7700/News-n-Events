@@ -79,8 +79,6 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         setContentView(R.layout.activity_dashboard);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        currentId = firebaseAuth.getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Login Users").child(currentId);
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -136,16 +134,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-
-        if (GoogleSignInOptions.DEFAULT_SIGN_IN != null) {
-            updateGoogleNavheader();
-        } else if(GoogleSignInOptions.DEFAULT_SIGN_IN == null){
-            updateLoginNavHeader();
-        }
-
-        //updateGoogleNavheader();
-
-        //updateLoginNavHeader();
+        updateNavheader();
 
     }
 
@@ -202,44 +191,12 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         return false;
     }
 
-
-    public void updateLoginNavHeader() {
-
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                NavigationView navigationView = (NavigationView) findViewById(nav_view);
-                View headerView = navigationView.getHeaderView(0);
-
-                dashboardname = (TextView) headerView.findViewById(nameTV);
-                dashboardemail = (TextView) headerView.findViewById(emailTV);
-                dashboardphoto = (ImageView) headerView.findViewById(photoIV);
-
-                String ProfileImage = dataSnapshot.child("profileimage").getValue().toString();
-                String Email = dataSnapshot.child("email").getValue().toString();
-                String Username = dataSnapshot.child("username").getValue().toString();
-
-                Glide.with(Dashboard.this).load(ProfileImage).placeholder(R.drawable.profile_image3).into(dashboardphoto);
-                dashboardemail.setText(Email);
-                dashboardname.setText(Username);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-
-        });
-
-
-    }
-
     @SuppressLint("ResourceType")
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void updateGoogleNavheader() {
+    public void updateNavheader() {
+
+        currentId = firebaseAuth.getCurrentUser().getUid();
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Login Users").child(currentId);
 
         NavigationView navigationView = (NavigationView) findViewById(nav_view);
         View headerView = navigationView.getHeaderView(0);
@@ -275,6 +232,34 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
             Glide.with(Dashboard.this).load(personPhoto).placeholder(R.drawable.profile_image3).into(dashboardphoto);
 
+        }else {
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    NavigationView navigationView = (NavigationView) findViewById(nav_view);
+                    View headerView = navigationView.getHeaderView(0);
+
+                    dashboardname = (TextView) headerView.findViewById(nameTV);
+                    dashboardemail = (TextView) headerView.findViewById(emailTV);
+                    dashboardphoto = (ImageView) headerView.findViewById(photoIV);
+
+                    String ProfileImage = dataSnapshot.child("profileimage").getValue().toString();
+                    String Email = dataSnapshot.child("email").getValue().toString();
+                    String Username = dataSnapshot.child("username").getValue().toString();
+
+                    Glide.with(Dashboard.this).load(ProfileImage).placeholder(R.drawable.profile_image3).into(dashboardphoto);
+                    dashboardemail.setText(Email);
+                    dashboardname.setText(Username);
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+
+            });
         }
     }
 

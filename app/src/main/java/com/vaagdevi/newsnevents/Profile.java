@@ -16,9 +16,15 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -33,12 +39,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.annotations.Nullable;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.HashMap;
 
@@ -63,6 +67,9 @@ public class Profile extends AppCompatActivity {
     String currentId;
     FloatingActionButton profileeditinfo, profileeditimage;
     String downloadUrl;
+    private Uri imageUri;
+    AdView mAdView;
+    private InterstitialAd mInterstitialAd;
 
 
     @Override
@@ -76,6 +83,15 @@ public class Profile extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Login Users").child(currentId);
         progressDialog = new ProgressDialog(this);
         storageReference = FirebaseStorage.getInstance().getReference("Profile Images").child(currentId + ".jpg");
+
+        // Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
+        MobileAds.initialize(this, "ca-app-pub-2546283744340576~1317058396");
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        prepareAD();
 
         profilephoto = (CircleImageView) findViewById(R.id.profile_photo);
         profileeditinfo = (FloatingActionButton) findViewById(R.id.profile_editinfo);
@@ -125,16 +141,7 @@ public class Profile extends AppCompatActivity {
                 CollegeStr = profilecollege.getText().toString();
                 AddressStr = profileaddress.getText().toString();
 
-
-                if (GoogleSignInOptions.DEFAULT_SIGN_IN != null) {
-                    googleupdateProfile();
-                } else if (GoogleSignInOptions.DEFAULT_SIGN_IN == null) {
-                    loginupdateProfile();
-                }
-
-                //loginupdateProfile();
-
-                //googleupdateProfile();
+                updateProfile();
 
             }
         });
@@ -142,115 +149,19 @@ public class Profile extends AppCompatActivity {
         profileeditimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(i, GalleryPick);
-            }
-        });
-
-        if (GoogleSignInOptions.DEFAULT_SIGN_IN != null) {
-            googleprofiledata();
-        } else if (GoogleSignInOptions.DEFAULT_SIGN_IN == null) {
-            loginprofiledata();
-        }
-
-        //loginprofiledata();
-
-        //googleprofiledata();
-
-    }
-
-    public void loginprofiledata() {
-        currentId = firebaseAuth.getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Login Users").child(currentId);
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @SuppressLint("ResourceType")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-
-                String Email = dataSnapshot.child("email").getValue().toString();
-                String Username = dataSnapshot.child("username").getValue().toString();
-                String MobileNumber = dataSnapshot.child("mobilenumber").getValue().toString();
-                String Password = dataSnapshot.child("password").getValue().toString();
-                String RollNo = dataSnapshot.child("rollno").getValue().toString();
-                String Branch = dataSnapshot.child("branch").getValue().toString();
-                String College = dataSnapshot.child("college").getValue().toString();
-                String Address = dataSnapshot.child("address").getValue().toString();
-                String ProfileImage = dataSnapshot.child("profileimage").getValue().toString();
-
-                profileemail.setText(Email);
-                profileusername.setText(Username);
-                profilemobilenumber.setText(MobileNumber);
-                profilepassword.setText(Password);
-                profilerollno.setText(RollNo);
-                profileyear.setAdapter(arrayAdapter);
-                profilebranch.setText(Branch);
-                profilecollege.setText(College);
-                profileaddress.setText(Address);
-
-                //Picasso.with(getApplicationContext()).load(ProfileImage).placeholder(R.drawable.profile_image3).into(profilephoto);
-                Glide.with(Profile.this).load(ProfileImage).placeholder(R.drawable.profile_image3).into(profilephoto);
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-
-        });
-
-    }
-
-    private void loginupdateProfile() {
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    progressDialog.setTitle("Updating your profile");
-                    progressDialog.setMessage("Please wait...");
-                    progressDialog.show();
-
-                    HashMap<String, Object> postMap = new HashMap<>();
-                    postMap.put("username", UsernameStr);
-                    postMap.put("email", EmailStr);
-                    postMap.put("mobilenumber", MobileNumberStr);
-                    postMap.put("password", PasswordStr);
-                    postMap.put("rollno", RollNoStr);
-                    postMap.put("year", YearStr);
-                    postMap.put("branch", BranchStr);
-                    postMap.put("college", CollegeStr);
-                    postMap.put("address", AddressStr);
-
-                    databaseReference.updateChildren(postMap)
-                            .addOnCompleteListener(new OnCompleteListener() {
-                                @Override
-                                public void onComplete(@NonNull Task task) {
-                                    if (task.isSuccessful()) {
-                                        progressDialog.dismiss();
-                                        startActivity(new Intent(Profile.this, Profile.class));
-                                        overridePendingTransition(0, 0);
-                                        finish();
-                                        Toast.makeText(Profile.this, "Profile updated successfully!", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        progressDialog.dismiss();
-                                        Toast.makeText(Profile.this, "Error occurred! Try again", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                CropImage.activity(imageUri)
+                        .setAspectRatio(1, 1)
+                        .start(Profile.this);
 
             }
         });
+
+        profileData();
+
     }
 
-    public void googleprofiledata() {
+
+    public void profileData() {
 
         currentId = firebaseAuth.getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Login Users").child(currentId);
@@ -296,11 +207,33 @@ public class Profile extends AppCompatActivity {
                     profilepassword.setVisibility(View.GONE);
                     profileeditimage.setVisibility(View.GONE);
 
-
-                    final StorageReference googlefilePath = storageReference;
                     final Uri personPhoto = acct.getPhotoUrl();
-
                     Glide.with(Profile.this).load(personPhoto).placeholder(R.drawable.profile_image3).into(profilephoto);
+
+                }else {
+
+                    String Email = dataSnapshot.child("email").getValue().toString();
+                    String Username = dataSnapshot.child("username").getValue().toString();
+                    String MobileNumber = dataSnapshot.child("mobilenumber").getValue().toString();
+                    String Password = dataSnapshot.child("password").getValue().toString();
+                    String RollNo = dataSnapshot.child("rollno").getValue().toString();
+                    String Branch = dataSnapshot.child("branch").getValue().toString();
+                    String College = dataSnapshot.child("college").getValue().toString();
+                    String Address = dataSnapshot.child("address").getValue().toString();
+                    String ProfileImage = dataSnapshot.child("profileimage").getValue().toString();
+
+                    profileemail.setText(Email);
+                    profileusername.setText(Username);
+                    profilemobilenumber.setText(MobileNumber);
+                    profilepassword.setText(Password);
+                    profilerollno.setText(RollNo);
+                    profileyear.setAdapter(arrayAdapter);
+                    profilebranch.setText(Branch);
+                    profilecollege.setText(College);
+                    profileaddress.setText(Address);
+
+                    //Picasso.with(getApplicationContext()).load(ProfileImage).placeholder(R.drawable.profile_image3).into(profilephoto);
+                    Glide.with(Profile.this).load(ProfileImage).placeholder(R.drawable.profile_image3).into(profilephoto);
 
                 }
             }
@@ -311,70 +244,104 @@ public class Profile extends AppCompatActivity {
             }
 
         });
-
-
     }
 
-    private void googleupdateProfile() {
+    private void updateProfile() {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    progressDialog.setTitle("Updating your profile");
-                    progressDialog.setMessage("Please wait...");
-                    progressDialog.show();
 
-                    HashMap<String, Object> postMap = new HashMap<>();
-                    postMap.put("username", UsernameStr);
-                    postMap.put("email", EmailStr);
-                    postMap.put("mobilenumber", MobileNumberStr);
-                    postMap.put("rollno", RollNoStr);
-                    postMap.put("year", YearStr);
-                    postMap.put("branch", BranchStr);
-                    postMap.put("college", CollegeStr);
-                    postMap.put("address", AddressStr);
+                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .build();
 
-                    databaseReference.updateChildren(postMap)
-                            .addOnCompleteListener(new OnCompleteListener() {
-                                @Override
-                                public void onComplete(@NonNull Task task) {
-                                    if (task.isSuccessful()) {
-                                        progressDialog.dismiss();
-                                        startActivity(new Intent(Profile.this, Profile.class));
-                                        overridePendingTransition(0, 0);
-                                        finish();
-                                        Toast.makeText(Profile.this, "Profile updated successfully!", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        progressDialog.dismiss();
-                                        Toast.makeText(Profile.this, "Error occurred! Try again", Toast.LENGTH_SHORT).show();
+                // Build a GoogleSignInClient with the options specified by gso.
+                mGoogleSignInClient = GoogleSignIn.getClient(Profile.this, gso);
+
+                GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(Profile.this);
+                if (acct != null) {
+                    if (dataSnapshot.exists()) {
+                        progressDialog.setTitle("Updating your profile");
+                        progressDialog.setMessage("Please wait...");
+                        progressDialog.show();
+
+                        HashMap<String, Object> postMap = new HashMap<>();
+                        postMap.put("username", UsernameStr);
+                        postMap.put("email", EmailStr);
+                        postMap.put("mobilenumber", MobileNumberStr);
+                        postMap.put("rollno", RollNoStr);
+                        postMap.put("year", YearStr);
+                        postMap.put("branch", BranchStr);
+                        postMap.put("college", CollegeStr);
+                        postMap.put("address", AddressStr);
+
+                        databaseReference.updateChildren(postMap)
+                                .addOnCompleteListener(new OnCompleteListener() {
+                                    @Override
+                                    public void onComplete(@NonNull Task task) {
+                                        if (task.isSuccessful()) {
+                                            progressDialog.dismiss();
+                                            startActivity(new Intent(Profile.this, Profile.class));
+                                            overridePendingTransition(0, 0);
+                                            finish();
+                                            Toast.makeText(Profile.this, "Profile updated successfully!", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            progressDialog.dismiss();
+                                            Toast.makeText(Profile.this, "Error occurred! Try again", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
-                                }
-                            });
+                                });
+                    }
+                }else{
+                    if (dataSnapshot.exists()) {
+                        progressDialog.setTitle("Updating your profile");
+                        progressDialog.setMessage("Please wait...");
+                        progressDialog.show();
+
+                        HashMap<String, Object> postMap = new HashMap<>();
+                        postMap.put("username", UsernameStr);
+                        postMap.put("email", EmailStr);
+                        postMap.put("mobilenumber", MobileNumberStr);
+                        postMap.put("password", PasswordStr);
+                        postMap.put("rollno", RollNoStr);
+                        postMap.put("year", YearStr);
+                        postMap.put("branch", BranchStr);
+                        postMap.put("college", CollegeStr);
+                        postMap.put("address", AddressStr);
+
+                        databaseReference.updateChildren(postMap)
+                                .addOnCompleteListener(new OnCompleteListener() {
+                                    @Override
+                                    public void onComplete(@NonNull Task task) {
+                                        if (task.isSuccessful()) {
+                                            progressDialog.dismiss();
+                                            startActivity(new Intent(Profile.this, Profile.class));
+                                            overridePendingTransition(0, 0);
+                                            finish();
+                                            Toast.makeText(Profile.this, "Profile updated successfully!", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            progressDialog.dismiss();
+                                            Toast.makeText(Profile.this, "Error occurred! Try again", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                    }
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == GalleryPick && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri imageUri = data.getData();
-            CropImage.activity()
-                    .setGuidelines(CropImageView.Guidelines.ON)
-                    .setAspectRatio(1, 1)
-                    .start(this);
-        }
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && data != null) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
-
             if (resultCode == RESULT_OK) {
 
                 final Uri resultUri = result.getUri();
@@ -394,26 +361,13 @@ public class Profile extends AppCompatActivity {
                         filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                databaseReference.child("profileimage").setValue(String.valueOf(uri))
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    Toast.makeText(Profile.this, "Profile Image Updated", Toast.LENGTH_SHORT).show();
-                                                    progressDialog.dismiss();
-                                                } else {
-                                                    progressDialog.dismiss();
-                                                    String message = task.getException().getMessage();
-                                                    Toast.makeText(Profile.this, "Error Occurred !!! Try again " + message, Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
-                                        });
+                                databaseReference.child("profileimage").setValue(String.valueOf(uri));
+                                progressDialog.dismiss();
+                                Toast.makeText(Profile.this, "Profile image updated!", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
                 });
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Exception error = result.getError();
             }
         }
     }
@@ -429,5 +383,29 @@ public class Profile extends AppCompatActivity {
         }
     }
 
+    public void prepareAD(){
+        mInterstitialAd = new InterstitialAd(this);
+        //Test AD Unit : ca-app-pub-3940256099942544/1033173712
+        mInterstitialAd.setAdUnitId("ca-app-pub-2546283744340576/2313078313");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (mInterstitialAd.isLoaded()){
+            mInterstitialAd.show();
+
+            mInterstitialAd.setAdListener(new AdListener(){
+                @Override
+                public void onAdClosed() {
+                    super.onAdClosed();
+                    finish();
+                }
+            });
+        }else {
+            super.onBackPressed();
+        }
+    }
 
 }

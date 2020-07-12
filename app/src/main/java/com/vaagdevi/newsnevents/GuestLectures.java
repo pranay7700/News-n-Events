@@ -14,6 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,6 +34,8 @@ public class GuestLectures extends AppCompatActivity {
     ArrayList<GuestLecturesRegdatabase> list;
     GuestLecturesMyAdapter adapter;
     SwipeRefreshLayout refreshLayout;
+    AdView mAdView;
+    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +45,34 @@ public class GuestLectures extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.guestlectureRV);
         recyclerView.setLayoutManager( new LinearLayoutManager(this));
         refreshLayout = findViewById(R.id.refresh_guest_lectures);
+
+        // Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
+        MobileAds.initialize(this, "ca-app-pub-2546283744340576~1317058396");
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        prepareAD();
+
+        /*ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mInterstitialAd.isLoaded()){
+                            mInterstitialAd.show();
+                        }else {
+                            Log.d("TAG","Interstital not Loaded");
+                        }
+                        prepareAD();
+                    }
+                });
+            }
+        },0,60, TimeUnit.SECONDS);*/
+
 
         list = new ArrayList<GuestLecturesRegdatabase>();
         reference = FirebaseDatabase.getInstance().getReference().child("Guest Lectures");
@@ -105,4 +140,28 @@ public class GuestLectures extends AppCompatActivity {
         }
     }
 
+    public void prepareAD(){
+        mInterstitialAd = new InterstitialAd(this);
+        //Test AD Unit : ca-app-pub-3940256099942544/1033173712
+        mInterstitialAd.setAdUnitId("ca-app-pub-2546283744340576/2313078313");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (mInterstitialAd.isLoaded()){
+            mInterstitialAd.show();
+
+            mInterstitialAd.setAdListener(new AdListener(){
+                @Override
+                public void onAdClosed() {
+                    super.onAdClosed();
+                    finish();
+                }
+            });
+        }else {
+            super.onBackPressed();
+        }
+    }
 }

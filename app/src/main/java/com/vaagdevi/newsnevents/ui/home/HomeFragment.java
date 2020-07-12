@@ -20,6 +20,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.vaagdevi.newsnevents.EventsActivity;
 import com.vaagdevi.newsnevents.GuestLectures;
 import com.vaagdevi.newsnevents.NewsActivity;
@@ -35,6 +38,7 @@ public class HomeFragment extends Fragment {
     ImageView HomeBackground,HomeLogo,HomeClover,HomeEvents,HomeNews,HomeNotifications,HomeProfile,HomeGuestLectures,HomeWorkshops;
     LinearLayout HomeTextsplash, HomeExplore, HomeMenus;
     Animation FromBottom;
+    AdView mAdView;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -46,6 +50,11 @@ public class HomeFragment extends Fragment {
 
         FromBottom = AnimationUtils.loadAnimation(getActivity(), R.anim.frombottom);
 
+        MobileAds.initialize(getActivity(), "ca-app-pub-2546283744340576~1317058396");
+
+        mAdView = root.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         HomeBackground = (ImageView) root.findViewById(R.id.home_background);
         HomeLogo = (ImageView) root.findViewById(R.id.home_splashlogo);

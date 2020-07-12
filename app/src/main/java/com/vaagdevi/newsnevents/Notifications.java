@@ -14,6 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,6 +34,8 @@ public class Notifications extends AppCompatActivity {
     ArrayList<NotificationsRegdatabase> list;
     NotificationsMyAdapter adapter;
     SwipeRefreshLayout refreshLayout;
+    AdView mAdView;
+    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +45,15 @@ public class Notifications extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.notificationsRV);
         recyclerView.setLayoutManager( new LinearLayoutManager(this));
         refreshLayout = findViewById(R.id.refresh_notifications);
+
+        // Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
+        MobileAds.initialize(this, "ca-app-pub-2546283744340576~1317058396");
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        prepareAD();
 
         list = new ArrayList<NotificationsRegdatabase>();
         reference = FirebaseDatabase.getInstance().getReference().child("Notifications");
@@ -106,4 +122,29 @@ public class Notifications extends AppCompatActivity {
         }
 
     }
+    public void prepareAD(){
+        mInterstitialAd = new InterstitialAd(this);
+        //Test AD Unit : ca-app-pub-3940256099942544/1033173712
+        mInterstitialAd.setAdUnitId("ca-app-pub-2546283744340576/2313078313");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (mInterstitialAd.isLoaded()){
+            mInterstitialAd.show();
+
+            mInterstitialAd.setAdListener(new AdListener(){
+                @Override
+                public void onAdClosed() {
+                    super.onAdClosed();
+                    finish();
+                }
+            });
+        }else {
+            super.onBackPressed();
+        }
+    }
+
 }
