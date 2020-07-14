@@ -79,7 +79,9 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         setContentView(R.layout.activity_dashboard);
 
         firebaseAuth = FirebaseAuth.getInstance();
-
+        /*currentId = firebaseAuth.getCurrentUser().getUid();
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Login Users").child(currentId);
+*/
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -195,9 +197,6 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void updateNavheader() {
 
-        currentId = firebaseAuth.getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Login Users").child(currentId);
-
         NavigationView navigationView = (NavigationView) findViewById(nav_view);
         View headerView = navigationView.getHeaderView(0);
 
@@ -232,7 +231,12 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
             Glide.with(Dashboard.this).load(personPhoto).placeholder(R.drawable.profile_image3).into(dashboardphoto);
 
-        }else {
+        } else {
+
+            currentId = firebaseAuth.getCurrentUser().getUid();
+            databaseReference = FirebaseDatabase.getInstance().getReference().child("Login Users").child(currentId);
+
+
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -273,14 +277,15 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             super.onBackPressed();
             return;
         } else {
-            backToast = Toast.makeText(getBaseContext(), "Press back again to exit", Toast.LENGTH_SHORT);
-            backToast.show();
+//            backToast = Toast.makeText(getBaseContext(), "Press back again to exit", Toast.LENGTH_SHORT);
+//            backToast.show();
         }
 
         backPressedTime = System.currentTimeMillis();
         finish();
 
     }
+
     public void checkConnection() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(
                 Context.CONNECTIVITY_SERVICE);
@@ -290,10 +295,5 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             Toast.makeText(Dashboard.this, "No Internet Connection!",
                     Toast.LENGTH_LONG).show();
         }
-    }
-
-    @Override
-    protected void onStart () {
-        super.onStart();
     }
 }

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -251,7 +250,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                            /*GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                                     .requestEmail()
                                     .build();
 
@@ -287,14 +286,14 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
 
-                                    /*progressDialog.dismiss();
+                                    progressDialog.dismiss();
                                     startActivity(new Intent(MainActivity.this, Dashboard.class));
                                     Toast.makeText(MainActivity.this, "Logined Successfully", Toast.LENGTH_SHORT).show();
-                                    finish();*/
+                                    finish();
 
                                     }
                                 });
-                            }
+                            }*/
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -334,7 +333,8 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         }
         super.onStart();
     }
-    public void prepareAD(){
+
+    public void prepareAD() {
         mInterstitialAd = new InterstitialAd(this);
         //Test AD Unit : ca-app-pub-3940256099942544/1033173712
         mInterstitialAd.setAdUnitId("ca-app-pub-2546283744340576/2313078313");
@@ -344,17 +344,17 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        if (mInterstitialAd.isLoaded()){
+        if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
 
-            mInterstitialAd.setAdListener(new AdListener(){
+            mInterstitialAd.setAdListener(new AdListener() {
                 @Override
                 public void onAdClosed() {
                     super.onAdClosed();
                     finish();
                 }
             });
-        }else {
+        } else {
             super.onBackPressed();
         }
     }
