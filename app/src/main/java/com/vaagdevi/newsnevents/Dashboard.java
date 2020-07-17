@@ -37,6 +37,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -175,21 +176,31 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
 
     private void signOut() {
-        mGoogleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(Dashboard.this, "Successfully signed out", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(Dashboard.this, MainActivity.class));
-                finish();
-            }
-        });
-
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null) {
+            mGoogleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    firebaseAuth.signOut();
+                    startActivity(new Intent(Dashboard.this, MainActivity.class));
+                    Toast.makeText(Dashboard.this, "Successfully signed out", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            });
+        }else {
+            firebaseAuth.signOut();
+            startActivity(new Intent(Dashboard.this, MainActivity.class));
+            Toast.makeText(Dashboard.this, "Successfully signed out", Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
         return false;
     }
 
@@ -277,12 +288,11 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             super.onBackPressed();
             return;
         } else {
-//            backToast = Toast.makeText(getBaseContext(), "Press back again to exit", Toast.LENGTH_SHORT);
-//            backToast.show();
+            backToast = Toast.makeText(getBaseContext(), "Press back again to exit", Toast.LENGTH_SHORT);
+            backToast.show();
         }
 
         backPressedTime = System.currentTimeMillis();
-        finish();
 
     }
 

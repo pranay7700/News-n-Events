@@ -165,7 +165,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                                         Toast.makeText(MainActivity.this, "Welcome to News n Events", Toast.LENGTH_SHORT).show();
                                         FirebaseUser firebaseUser = mAuth.getCurrentUser();
                                         startActivity(new Intent(MainActivity.this, Dashboard.class));
-
+                                        finish();
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         progressDialog.dismiss();
@@ -327,10 +327,10 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if (account != null) {
-            final String personName = account.getDisplayName();
+        if (account != null || currentUser != null) {
+            //final String personName = account.getDisplayName();
             startActivity(new Intent(MainActivity.this, Dashboard.class));
-            Toast.makeText(MainActivity.this, "Welcome " + personName + " to News n Events", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Welcome  to News n Events", Toast.LENGTH_SHORT).show();
             finish();
         }
         super.onStart();

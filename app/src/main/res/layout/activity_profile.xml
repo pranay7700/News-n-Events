@@ -147,6 +147,7 @@
                 android:layout_below="@id/profile_rollnoET"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="10dp"
+                android:entries="@array/year"
                 android:background="@drawable/profile_border" />
 
 

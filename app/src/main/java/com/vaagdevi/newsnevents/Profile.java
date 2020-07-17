@@ -107,16 +107,24 @@ public class Profile extends AppCompatActivity {
         profileaddress = (EditText) findViewById(R.id.profile_addressET);
 
 
-        arrayAdapter = ArrayAdapter.createFromResource(this, R.array.year, android.R.layout.simple_spinner_item);
+       /* arrayAdapter = ArrayAdapter.createFromResource(this, R.array.year, android.R.layout.simple_spinner_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        profileyear.setAdapter(arrayAdapter);
+        profileyear.setAdapter(arrayAdapter);*/
         profileyear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
+                        YearStr = "1";
                         break;
                     case 1:
+                        YearStr = "2";
+                        break;
+                    case 2:
+                        YearStr = "3";
+                        break;
+                    case 3:
+                        YearStr = "4";
                         break;
                 }
             }
@@ -191,6 +199,7 @@ public class Profile extends AppCompatActivity {
                     String GoogleMobileNumber = dataSnapshot.child("mobilenumber").getValue().toString();
                     String GoogleRollNo = dataSnapshot.child("rollno").getValue().toString();
                     String GoogleBranch = dataSnapshot.child("branch").getValue().toString();
+                    String GoogleYear = dataSnapshot.child("year").getValue().toString();
                     String GoogleCollege = dataSnapshot.child("college").getValue().toString();
                     String GoogleAddress = dataSnapshot.child("address").getValue().toString();
                     //String GoogleProfileImage = dataSnapshot.child("profileimage").getValue().toString();
@@ -200,7 +209,7 @@ public class Profile extends AppCompatActivity {
                     profileusername.setText(personName);
                     profilemobilenumber.setText(GoogleMobileNumber);
                     profilerollno.setText(GoogleRollNo);
-                    profileyear.setAdapter(arrayAdapter);
+                    profileyear.setSelected(Boolean.parseBoolean(GoogleYear));
                     profilebranch.setText(GoogleBranch);
                     profilecollege.setText(GoogleCollege);
                     profileaddress.setText(GoogleAddress);
@@ -218,6 +227,7 @@ public class Profile extends AppCompatActivity {
                     String Password = dataSnapshot.child("password").getValue().toString();
                     String RollNo = dataSnapshot.child("rollno").getValue().toString();
                     String Branch = dataSnapshot.child("branch").getValue().toString();
+                    String Year = dataSnapshot.child("year").getValue().toString();
                     String College = dataSnapshot.child("college").getValue().toString();
                     String Address = dataSnapshot.child("address").getValue().toString();
                     String ProfileImage = dataSnapshot.child("profileimage").getValue().toString();
@@ -227,7 +237,7 @@ public class Profile extends AppCompatActivity {
                     profilemobilenumber.setText(MobileNumber);
                     profilepassword.setText(Password);
                     profilerollno.setText(RollNo);
-                    profileyear.setAdapter(arrayAdapter);
+                    profileyear.setSelected(Boolean.parseBoolean(Year));
                     profilebranch.setText(Branch);
                     profilecollege.setText(College);
                     profileaddress.setText(Address);
