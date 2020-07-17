@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -135,7 +136,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                progressDialog.setTitle("Logging In");
+                progressDialog.setTitle("Validating");
                 progressDialog.setMessage("Please wait...");
                 checkConnection();
 
@@ -154,7 +155,6 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                     Passid.requestFocus();
                 } else if (!(emailid.isEmpty() && passid.isEmpty())) {
 
-
                     mAuth.signInWithEmailAndPassword(emailid, passid)
                             .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -162,7 +162,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
 
                                     if ((task.isSuccessful())) {
                                         // Sign in success, update UI with the signed-in user's information
-                                        Toast.makeText(MainActivity.this, "Logined Successfully", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, "Welcome to News n Events", Toast.LENGTH_SHORT).show();
                                         FirebaseUser firebaseUser = mAuth.getCurrentUser();
                                         startActivity(new Intent(MainActivity.this, Dashboard.class));
 
@@ -178,8 +178,6 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
                 }
             }
-
-
         });
 
         register.setOnClickListener(new View.OnClickListener() {
@@ -210,6 +208,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -220,11 +219,12 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
+
                 progressDialog.dismiss();
+                final String personName = account.getDisplayName();
                 startActivity(new Intent(MainActivity.this, Dashboard.class));
-                Toast.makeText(MainActivity.this, "Logined Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Welcome " + personName + " to News n Events", Toast.LENGTH_SHORT).show();
                 firebaseAuthWithGoogle(account);
-                finish();
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
@@ -250,7 +250,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                            /*GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                                     .requestEmail()
                                     .build();
 
@@ -259,7 +259,7 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
 
                             GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
                             if (acct != null) {
-                                String personName = acct.getDisplayName();
+                                final String personName = acct.getDisplayName();
                                 String personGivenName = acct.getGivenName();
                                 String personFamilyName = acct.getFamilyName();
                                 String personEmail = acct.getEmail();
@@ -286,14 +286,15 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
 
-                                    progressDialog.dismiss();
-                                    startActivity(new Intent(MainActivity.this, Dashboard.class));
-                                    Toast.makeText(MainActivity.this, "Logined Successfully", Toast.LENGTH_SHORT).show();
-                                    finish();
+                                        /*progressDialog.dismiss();
+                                        startActivity(new Intent(MainActivity.this, Dashboard.class));
+                                        Toast.makeText(MainActivity.this, "Welcome " + personName + " to News n Events", Toast.LENGTH_SHORT).show();
+                                        finish();*/
 
                                     }
                                 });
-                            }*/
+                            }
+
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -314,7 +315,6 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
 
         if (null == activeNetwork) {
-
             progressDialog.dismiss();
             Toast.makeText(MainActivity.this, "No Internet Connection!", Toast.LENGTH_LONG).show();
         }
@@ -328,7 +328,9 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
+            final String personName = account.getDisplayName();
             startActivity(new Intent(MainActivity.this, Dashboard.class));
+            Toast.makeText(MainActivity.this, "Welcome " + personName + " to News n Events", Toast.LENGTH_SHORT).show();
             finish();
         }
         super.onStart();

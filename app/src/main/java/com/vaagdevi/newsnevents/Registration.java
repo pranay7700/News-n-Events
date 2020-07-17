@@ -134,24 +134,15 @@ public class Registration extends AppCompatActivity {
                                                 startActivity(new Intent(Registration.this, MainActivity.class));
                                                 Toast.makeText(Registration.this, "Signed Up Successfully!!!", Toast.LENGTH_SHORT).show();
                                                 finish();
-
-
                                             }
                                         });
-
-
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         progressDialog.dismiss();
                                         Toast.makeText(Registration.this, "Email Already Exists", Toast.LENGTH_SHORT).show();
-
                                     }
-
-
                                 }
                             });
-
-
                 } else {
                     Toast.makeText(Registration.this, "Sign Up Error", Toast.LENGTH_LONG).show();
                 }
