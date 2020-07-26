@@ -11,10 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -30,7 +26,6 @@
 
                 </RelativeLayout>
             </ScrollView>
-        </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.gms.ads.AdView
@@ -43,7 +38,5 @@
         ads:adSize="BANNER"
         ads:adUnitId="ca-app-pub-2546283744340576/6627248914">
     </com.google.android.gms.ads.AdView>
-
-
 
 </RelativeLayout>

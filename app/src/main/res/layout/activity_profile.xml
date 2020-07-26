@@ -80,7 +80,7 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <androidx.core.widget.NestedScrollView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorWhite"
@@ -198,7 +198,7 @@
                 android:textSize="20dp" />
 
         </RelativeLayout>
-    </androidx.core.widget.NestedScrollView>
+    </ScrollView>
 
     <com.google.android.gms.ads.AdView
         xmlns:ads="http://schemas.android.com/apk/res-auto"

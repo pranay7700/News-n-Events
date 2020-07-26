@@ -68,7 +68,7 @@
                     android:id="@+id/notifications_descTV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/guestlecture_nameTV"
+                    android:layout_below="@+id/notifications_titleTV"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="55dp"
@@ -81,7 +81,7 @@
                     android:id="@+id/notifications_dateTV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/guestlecture_emailTV"
+                    android:layout_below="@+id/notifications_descTV"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="110dp"
@@ -91,11 +91,7 @@
 
 
             </RelativeLayout>
-
-
         </RelativeLayout>
-
     </androidx.cardview.widget.CardView>
-
 
 </RelativeLayout>

@@ -56,8 +56,8 @@ import static com.vaagdevi.newsnevents.R.id.photoIV;
 public class Dashboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "Dashboard";
-    private FirebaseAuth firebaseAuth;
     GoogleSignInClient mGoogleSignInClient;
+    private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private String currentId;

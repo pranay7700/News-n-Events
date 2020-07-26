@@ -48,13 +48,13 @@ public class HomeFragment extends Fragment {
         final View root = inflater.inflate(R.layout.fragment_home, container, false);
         //final TextView textView = root.findViewById(R.id.text_home);
 
-        FromBottom = AnimationUtils.loadAnimation(getActivity(), R.anim.frombottom);
-
         MobileAds.initialize(getActivity(), "ca-app-pub-2546283744340576~1317058396");
 
         mAdView = root.findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+        FromBottom = AnimationUtils.loadAnimation(getActivity(), R.anim.frombottom);
 
         HomeBackground = (ImageView) root.findViewById(R.id.home_background);
         HomeLogo = (ImageView) root.findViewById(R.id.home_splashlogo);

@@ -43,6 +43,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+
 
 public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
 
@@ -259,40 +261,35 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
 
                             GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
                             if (acct != null) {
-                                final String personName = acct.getDisplayName();
+
+                                String personName = acct.getDisplayName();
                                 String personGivenName = acct.getGivenName();
                                 String personFamilyName = acct.getFamilyName();
                                 String personEmail = acct.getEmail();
                                 String personId = acct.getId();
-
                                 Uri personPhoto = acct.getPhotoUrl();
 
+                                HashMap<String,Object> hashMap = new HashMap<>();
+                                hashMap.put("email",personEmail);
+                                hashMap.put("username",personName);
+                                hashMap.put("mobilenumber","");
+                                hashMap.put("password","");
+                                hashMap.put("rollno","");
+                                hashMap.put("year","");
+                                hashMap.put("branch","");
+                                hashMap.put("college","");
+                                hashMap.put("address","");
+                                hashMap.put("profileimage","!");
 
-                                final String email = personEmail;
-                                final String username = personName;
-                                final String mobilenumber = "";
-                                final String password = "";
-                                final String rollno = "";
-                                final String year = "";
-                                final String branch = "";
-                                final String college = "";
-                                final String address = "";
-                                final String profileimage = "";
 
-                                Regdatabase regdatabase = new Regdatabase(email, username, mobilenumber, password, rollno, year, branch, college, address, profileimage);
-
-                                FirebaseDatabase.getInstance().getReference(databaseref.getKey()).child(mAuth.getCurrentUser().getUid())
-                                        .setValue(regdatabase).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                FirebaseDatabase.getInstance().getReference(databaseref.getKey())
+                                        .child(mAuth.getCurrentUser().getUid())
+                                        .setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-
-                                        /*progressDialog.dismiss();
-                                        startActivity(new Intent(MainActivity.this, Dashboard.class));
-                                        Toast.makeText(MainActivity.this, "Welcome " + personName + " to News n Events", Toast.LENGTH_SHORT).show();
-                                        finish();*/
-
                                     }
                                 });
+
                             }
 
                             //updateUI(user);

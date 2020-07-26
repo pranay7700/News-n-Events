@@ -9,7 +9,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -107,14 +106,14 @@ public class Profile extends AppCompatActivity {
         profileaddress = (EditText) findViewById(R.id.profile_addressET);
 
 
-       /* arrayAdapter = ArrayAdapter.createFromResource(this, R.array.year, android.R.layout.simple_spinner_item);
+      /*  arrayAdapter = ArrayAdapter.createFromResource(this, R.array.year, android.R.layout.simple_spinner_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         profileyear.setAdapter(arrayAdapter);*/
-        profileyear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+       /* profileyear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
-                    case 0:
+                    *//*case 0:
                         YearStr = "1";
                         break;
                     case 1:
@@ -125,7 +124,7 @@ public class Profile extends AppCompatActivity {
                         break;
                     case 3:
                         YearStr = "4";
-                        break;
+                        break;*//*
                 }
             }
 
@@ -133,7 +132,7 @@ public class Profile extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });
+        });*/
 
         profileeditinfo.setOnClickListener(new View.OnClickListener() {
             @Override
