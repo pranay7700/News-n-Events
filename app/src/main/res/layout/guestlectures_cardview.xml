@@ -6,6 +6,23 @@
     android:orientation="horizontal"
     android:weightSum="2">
 
+    <ProgressBar
+        android:id="@+id/progress_guest_lectures"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/show_No_guest_lectures"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="No Guest Lectures at Present !"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
