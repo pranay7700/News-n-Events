@@ -39,85 +39,91 @@
             android:orientation="vertical"
             android:paddingBottom="50dp">
 
-
-            <ImageView
-                android:id="@+id/workshops_imageIV"
+            <RelativeLayout
+                android:id="@+id/workshops_imageRL"
                 android:layout_width="350dp"
-                android:layout_height="130dp"
-                android:layout_alignParentTop="true"
-                android:layout_gravity="center"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="10dp" />
+                android:layout_height="130dp">
 
-            <TextView
-                android:id="@+id/workshops_nameTV"
-                android:layout_width="180dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/workshops_imageIV"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="24dp"
-                android:textColor="#000"
-                android:textSize="25dp"
-                android:textStyle="bold" />
+                <ImageView
+                    android:id="@+id/workshops_imageIV"
+                    android:layout_width="350dp"
+                    android:layout_height="130dp"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="10dp" />
+            </RelativeLayout>
 
-            <TextView
-                android:id="@+id/workshops_placeTV"
-                android:layout_width="180dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/workshops_nameTV"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="234dp"
-                android:layout_marginEnd="172dp"
-                android:layout_marginRight="150dp"
-                android:textColor="#000" />
-
-            <TextView
-                android:id="@+id/workshops_dateTV"
-                android:layout_width="115dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/workshops_imageIV"
-                android:layout_alignRight="@+id/workshops_nameTV"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="193dp"
-                android:layout_marginEnd="23dp"
-                android:layout_marginRight="-148dp"
-                android:textColor="#000" />
-
-            <TextView
-                android:id="@+id/workshops_timeTV"
-                android:layout_width="115dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/workshops_dateTV"
-                android:layout_alignRight="@+id/workshops_placeTV"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="232dp"
-                android:layout_marginEnd="23dp"
-                android:layout_marginRight="-147dp"
-                android:textColor="#000" />
-
-            <TextView
-                android:id="@+id/workshops_descTV"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="275dp"
-                android:layout_marginEnd="10dp"
-                android:textAlignment="gravity"
-                android:textColor="#000" />
+                android:layout_below="@+id/workshops_imageRL">
 
+                <TextView
+                    android:id="@+id/workshops_nameTV"
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="25dp"
+                    android:textColor="#000"
+                    android:textSize="25dp"
+                    android:textStyle="bold" />
 
+                <TextView
+                    android:id="@+id/workshops_placeTV"
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/workshops_nameTV"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="75dp"
+                    android:layout_marginEnd="180dp"
+                    android:layout_marginRight="150dp"
+                    android:textColor="#000" />
+
+                <TextView
+                    android:id="@+id/workshops_dateTV"
+                    android:layout_width="115dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@+id/workshops_nameTV"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginEnd="23dp"
+                    android:layout_marginRight="-145dp"
+                    android:textColor="#000" />
+
+                <TextView
+                    android:id="@+id/workshops_timeTV"
+                    android:layout_width="115dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/workshops_dateTV"
+                    android:layout_alignRight="@+id/workshops_placeTV"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="75dp"
+                    android:layout_marginEnd="23dp"
+                    android:layout_marginRight="-145dp"
+                    android:textColor="#000" />
+
+                <TextView
+                    android:id="@+id/workshops_descTV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="125dp"
+                    android:layout_marginEnd="10dp"
+                    android:textAlignment="gravity"
+                    android:textColor="#000" />
+            </RelativeLayout>
         </RelativeLayout>
-
     </androidx.cardview.widget.CardView>
-
-
 </RelativeLayout>

@@ -140,26 +140,42 @@
                 android:padding="5dp"
                 android:textSize="20dp" />
 
-            <Spinner
-                android:id="@+id/profile_yearSPI"
+            <RelativeLayout
+                android:id="@+id/profile_spinner_RL"
                 android:layout_width="match_parent"
                 android:layout_height="37dp"
                 android:layout_below="@id/profile_rollnoET"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="10dp"
-                android:entries="@array/year"
-                android:background="@drawable/profile_border" />
+                android:background="@drawable/profile_border">
+
+                <Spinner
+                    android:id="@+id/profile_yearSPI"
+                    android:layout_width="150dp"
+                    android:layout_height="37dp"
+                    android:entries="@array/year" />
+
+                <TextView
+                    android:id="@+id/profile_year_TV"
+                    android:layout_width="250dp"
+                    android:layout_height="37dp"
+                    android:padding="10dp"
+                    android:textColor="#000"
+                    android:layout_alignParentRight="true"
+                    />
+
+            </RelativeLayout>
 
 
             <EditText
                 android:id="@+id/profile_branchET"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/profile_yearSPI"
+                android:layout_below="@id/profile_spinner_RL"
                 android:layout_margin="10dp"
-                android:inputType="textCapCharacters"
                 android:background="@drawable/profile_border"
                 android:hint="Branch"
+                android:inputType="textCapCharacters"
                 android:padding="5dp"
                 android:textSize="20dp" />
 
@@ -200,16 +216,14 @@
         </RelativeLayout>
     </ScrollView>
 
-    <com.google.android.gms.ads.AdView
-        xmlns:ads="http://schemas.android.com/apk/res-auto"
+    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:id="@+id/adView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         ads:adSize="BANNER"
-        ads:adUnitId="ca-app-pub-2546283744340576/6627248914">
-    </com.google.android.gms.ads.AdView>
+        ads:adUnitId="ca-app-pub-2546283744340576/6627248914"></com.google.android.gms.ads.AdView>
 
 
 </LinearLayout>

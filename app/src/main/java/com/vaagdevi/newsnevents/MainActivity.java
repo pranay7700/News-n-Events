@@ -259,13 +259,14 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                             // Build a GoogleSignInClient with the options specified by gso.
                             mGoogleSignInClient = GoogleSignIn.getClient(MainActivity.this, gso);
 
-                            GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
+                            GoogleSignInAccount acct =GoogleSignIn.getLastSignedInAccount(MainActivity.this);
+//                            GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
                             if (acct != null) {
 
                                 String personName = acct.getDisplayName();
+                                String personEmail = acct.getEmail();
                                 String personGivenName = acct.getGivenName();
                                 String personFamilyName = acct.getFamilyName();
-                                String personEmail = acct.getEmail();
                                 String personId = acct.getId();
                                 Uri personPhoto = acct.getPhotoUrl();
 
@@ -281,7 +282,6 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                                 hashMap.put("address","");
                                 hashMap.put("profileimage","!");
 
-
                                 FirebaseDatabase.getInstance().getReference(databaseref.getKey())
                                         .child(mAuth.getCurrentUser().getUid())
                                         .setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -290,8 +290,25 @@ public class MainActivity<gso, mGoogleSignInClient> extends AppCompatActivity {
                                     }
                                 });
 
-                            }
+                                hashMap.put("email",personEmail);
+                                hashMap.put("username",personName);
+                                hashMap.put("mobilenumber","");
+                                hashMap.put("password","");
+                                hashMap.put("rollno","");
+                                hashMap.put("year","");
+                                hashMap.put("branch","");
+                                hashMap.put("college","");
+                                hashMap.put("address","");
+                                hashMap.put("profileimage","!");
 
+                                FirebaseDatabase.getInstance().getReference(databaseref.getKey())
+                                        .child(mAuth.getCurrentUser().getUid())
+                                        .setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                    }
+                                });
+                            }
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.

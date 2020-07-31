@@ -9,9 +9,11 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -43,6 +45,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -57,6 +60,7 @@ public class Profile extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private StorageReference storageReference;
     private ArrayAdapter<CharSequence> arrayAdapter;
+    private ArrayList<String> spinnerDataList;
     final static int GalleryPick = 1;
 
     CircleImageView profilephoto;
@@ -64,9 +68,11 @@ public class Profile extends AppCompatActivity {
     String UsernameStr, EmailStr, PasswordStr, MobileNumberStr, RollNoStr, YearStr, BranchStr, CollegeStr, AddressStr;
     Spinner profileyear;
     String currentId;
+    TextView profileyearTV;
     FloatingActionButton profileeditinfo, profileeditimage;
     String downloadUrl;
     private Uri imageUri;
+    ValueEventListener listener;
     AdView mAdView;
     private InterstitialAd mInterstitialAd;
 
@@ -101,38 +107,16 @@ public class Profile extends AppCompatActivity {
         profilemobilenumber = (EditText) findViewById(R.id.profile_mobilenumberET);
         profilerollno = (EditText) findViewById(R.id.profile_rollnoET);
         profileyear = (Spinner) findViewById(R.id.profile_yearSPI);
+        profileyearTV = (TextView) findViewById(R.id.profile_year_TV);
         profilebranch = (EditText) findViewById(R.id.profile_branchET);
         profilecollege = (EditText) findViewById(R.id.profile_collegeET);
         profileaddress = (EditText) findViewById(R.id.profile_addressET);
 
-
-      /*  arrayAdapter = ArrayAdapter.createFromResource(this, R.array.year, android.R.layout.simple_spinner_item);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        profileyear.setAdapter(arrayAdapter);*/
-       /* profileyear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    *//*case 0:
-                        YearStr = "1";
-                        break;
-                    case 1:
-                        YearStr = "2";
-                        break;
-                    case 2:
-                        YearStr = "3";
-                        break;
-                    case 3:
-                        YearStr = "4";
-                        break;*//*
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });*/
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(Profile.this);
+        if (acct != null) {
+            final Uri personPhoto = acct.getPhotoUrl();
+            Glide.with(Profile.this).load(personPhoto).placeholder(R.drawable.profile_image3).into(profilephoto);
+        }
 
         profileeditinfo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,6 +134,33 @@ public class Profile extends AppCompatActivity {
 
                 updateProfile();
 
+                arrayAdapter = ArrayAdapter.createFromResource(Profile.this, R.array.year, android.R.layout.simple_spinner_item);
+                arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                profileyear.setAdapter(arrayAdapter);
+                profileyear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                       /* switch (position) {
+                            case 0:
+                                YearStr = "1";
+                                break;
+                            case 1:
+                                YearStr = "2";
+                                break;
+                            case 2:
+                                YearStr = "3";
+                                break;
+                            case 3:
+                                YearStr = "4";
+                                break;
+                        }*/
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
             }
         });
 
@@ -177,7 +188,6 @@ public class Profile extends AppCompatActivity {
             @SuppressLint("ResourceType")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
 
                 GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestEmail()
@@ -208,17 +218,14 @@ public class Profile extends AppCompatActivity {
                     profileusername.setText(personName);
                     profilemobilenumber.setText(GoogleMobileNumber);
                     profilerollno.setText(GoogleRollNo);
-                    profileyear.setSelected(Boolean.parseBoolean(GoogleYear));
+                    profileyearTV.setText(GoogleYear);
                     profilebranch.setText(GoogleBranch);
                     profilecollege.setText(GoogleCollege);
                     profileaddress.setText(GoogleAddress);
                     profilepassword.setVisibility(View.GONE);
                     profileeditimage.setVisibility(View.GONE);
 
-                    final Uri personPhoto = acct.getPhotoUrl();
-                    Glide.with(Profile.this).load(personPhoto).placeholder(R.drawable.profile_image3).into(profilephoto);
-
-                }else {
+                } else {
 
                     String Email = dataSnapshot.child("email").getValue().toString();
                     String Username = dataSnapshot.child("username").getValue().toString();
@@ -236,7 +243,7 @@ public class Profile extends AppCompatActivity {
                     profilemobilenumber.setText(MobileNumber);
                     profilepassword.setText(Password);
                     profilerollno.setText(RollNo);
-                    profileyear.setSelected(Boolean.parseBoolean(Year));
+                    profileyearTV.setText(Year);
                     profilebranch.setText(Branch);
                     profilecollege.setText(College);
                     profileaddress.setText(Address);
@@ -251,7 +258,6 @@ public class Profile extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-
         });
     }
 
@@ -263,6 +269,9 @@ public class Profile extends AppCompatActivity {
                 GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestEmail()
                         .build();
+                progressDialog.setTitle("Updating your profile");
+                progressDialog.setMessage("Please wait...");
+                progressDialog.show();
 
                 // Build a GoogleSignInClient with the options specified by gso.
                 mGoogleSignInClient = GoogleSignIn.getClient(Profile.this, gso);
@@ -270,9 +279,10 @@ public class Profile extends AppCompatActivity {
                 GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(Profile.this);
                 if (acct != null) {
                     if (dataSnapshot.exists()) {
-                        progressDialog.setTitle("Updating your profile");
+
+                       /* progressDialog.setTitle("Updating your profile");
                         progressDialog.setMessage("Please wait...");
-                        progressDialog.show();
+                        progressDialog.show();*/
 
                         HashMap<String, Object> postMap = new HashMap<>();
                         postMap.put("username", UsernameStr);
@@ -283,6 +293,7 @@ public class Profile extends AppCompatActivity {
                         postMap.put("branch", BranchStr);
                         postMap.put("college", CollegeStr);
                         postMap.put("address", AddressStr);
+                        postMap.put("password", "");
 
                         databaseReference.updateChildren(postMap)
                                 .addOnCompleteListener(new OnCompleteListener() {
@@ -301,11 +312,11 @@ public class Profile extends AppCompatActivity {
                                     }
                                 });
                     }
-                }else{
+                } else {
                     if (dataSnapshot.exists()) {
-                        progressDialog.setTitle("Updating your profile");
+                      /*  progressDialog.setTitle("Updating your profile");
                         progressDialog.setMessage("Please wait...");
-                        progressDialog.show();
+                        progressDialog.show();*/
 
                         HashMap<String, Object> postMap = new HashMap<>();
                         postMap.put("username", UsernameStr);
@@ -337,6 +348,7 @@ public class Profile extends AppCompatActivity {
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -392,7 +404,7 @@ public class Profile extends AppCompatActivity {
         }
     }
 
-    public void prepareAD(){
+    public void prepareAD() {
         mInterstitialAd = new InterstitialAd(this);
         //Test AD Unit : ca-app-pub-3940256099942544/1033173712
         mInterstitialAd.setAdUnitId("ca-app-pub-2546283744340576/2313078313");
@@ -402,19 +414,18 @@ public class Profile extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        if (mInterstitialAd.isLoaded()){
+        if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
 
-            mInterstitialAd.setAdListener(new AdListener(){
+            mInterstitialAd.setAdListener(new AdListener() {
                 @Override
                 public void onAdClosed() {
                     super.onAdClosed();
                     finish();
                 }
             });
-        }else {
+        } else {
             super.onBackPressed();
         }
     }
-
 }
